@@ -220,3 +220,7 @@ items:
     name: "顶天立地"
     categories:
       - "熊猫"
+  - file: "熊猫卖萌.jpg"
+    name: "熊猫卖萌"
+    categories:
+      - "小大熊猫"
