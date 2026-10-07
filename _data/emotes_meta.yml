@@ -136,3 +136,6 @@ items:
     categories:
       - "熊猫"
       - "cute"
+  - file: "kimo猪.jpg"
+    name: "kimo猪"
+    categories: []
