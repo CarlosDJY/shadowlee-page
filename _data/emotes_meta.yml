@@ -260,3 +260,7 @@ items:
     name: "被指到的是？"
     categories:
       - "熊猫"
+  - file: "我是直女.png"
+    name: "我是直女"
+    categories:
+      - "我是直女"
