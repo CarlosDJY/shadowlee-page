@@ -172,3 +172,7 @@ items:
     name: "咬Kmx"
     categories:
       - "熊猫"
+  - file: "笑.jpg"
+    name: "笑"
+    categories:
+      - "熊猫"
