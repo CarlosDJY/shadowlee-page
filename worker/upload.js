@@ -1,18 +1,29 @@
 // Cloudflare Worker：接收上传文件并写入 GitHub 仓库
-// 支持两种 action：
-//   upload       上传表情图片，并写入/更新元数据（多分类、gif 默认归入 gif）
+// 支持 action：
+//   pingGithub    诊断：返回 GitHub API 可达性/配置（不含敏感信息）
+//   upload        上传表情图片，并写入/更新元数据（多分类、gif 默认归入 gif）
+//   upload-voice  上传语音文件
 //   setCategories 修改已上传表情的分类
 // 部署后需在 Workers & Pages → Settings → Variables 设置：
 //   UPLOAD_PASSWORD  （网页管理密码）
 //   GITHUB_TOKEN     （GitHub fine-grained token，仓库 contents 读写权限）
 //   GITHUB_REPO      （例：lu-91015/shadowlee.github.io）
 
-const META_PATH = '_data/emotes_meta.json';
+const META_PATH = '_data/emotes_meta.yml';
 const EMOTE_DIR = 'assets/images/emotes';
 
 function b64encodeUtf8(str) {
-  // 将 UTF-8 字符串转为 base64（GitHub contents API 要求）
-  return btoa(unescape(encodeURIComponent(str)));
+  // UTF-8 字符串 -> base64（GitHub contents API 要求）
+  const bytes = new TextEncoder().encode(str);
+  let bin = '';
+  for (let i = 0; i < bytes.length; i++) bin += String.fromCharCode(bytes[i]);
+  return btoa(bin);
+}
+
+function b64decodeUtf8(b64) {
+  // base64 -> UTF-8 字符串
+  const bytes = Uint8Array.from(atob(b64), c => c.charCodeAt(0));
+  return new TextDecoder().decode(bytes);
 }
 
 async function ghHeaders(env, extra) {
@@ -24,21 +35,91 @@ async function ghHeaders(env, extra) {
   }, extra || {});
 }
 
+// ---------- 极简 YAML（只处理本项目的结构） ----------
+
+function yamlString(s) {
+  // 统一用 JSON 双引号，Psych/SafeYAML 都能解析，且对中文安全
+  return JSON.stringify(String(s));
+}
+
+function dataToYaml(data) {
+  const lines = ['items:'];
+  for (const item of (data.items || [])) {
+    lines.push(`  - file: ${yamlString(item.file)}`);
+    lines.push(`    name: ${yamlString(item.name)}`);
+    const cats = item.categories || [];
+    if (cats.length === 0) {
+      lines.push('    categories: []');
+    } else {
+      lines.push('    categories:');
+      for (const c of cats) lines.push(`      - ${yamlString(c)}`);
+    }
+  }
+  return lines.join('\n') + '\n';
+}
+
+function parseYamlValue(v) {
+  v = v.trim();
+  if ((v.startsWith('"') && v.endsWith('"')) || (v.startsWith("'") && v.endsWith("'"))) {
+    try { return JSON.parse(v); } catch (e) { return v.slice(1, -1); }
+  }
+  if (v === '[]') return [];
+  return v;
+}
+
+function parseYaml(text) {
+  const data = { items: [] };
+  const lines = text.split(/\r?\n/);
+  let item = null;
+  let inCategories = false;
+  for (const raw of lines) {
+    const line = raw.replace(/\s+$/, '');
+    if (!line.trim() || line.trim().startsWith('#')) continue;
+    if (line === 'items:' || line === 'items: []') continue;
+    if (line.startsWith('  - file:')) {
+      item = { file: parseYamlValue(line.slice('  - file:'.length)), name: '', categories: [] };
+      data.items.push(item);
+      inCategories = false;
+    } else if (item && line.startsWith('    name:')) {
+      item.name = parseYamlValue(line.slice('    name:'.length));
+      inCategories = false;
+    } else if (item && line.startsWith('    categories:')) {
+      const rest = line.slice('    categories:'.length).trim();
+      if (rest === '[]') {
+        item.categories = [];
+        inCategories = false;
+      } else {
+        inCategories = true;
+      }
+    } else if (item && inCategories && line.startsWith('      - ')) {
+      item.categories.push(parseYamlValue(line.slice('      - '.length)));
+    }
+  }
+  return data;
+}
+
+// -----------------------------------------------------
+
 async function readMeta(env) {
   const url = `https://api.github.com/repos/${env.GITHUB_REPO}/contents/${META_PATH}`;
   const res = await fetch(url, { headers: await ghHeaders(env) });
   if (res.status === 404) return { data: { items: [] }, sha: null };
-  if (!res.ok) throw new Error(`读取元数据失败: ${res.status}`);
+  if (!res.ok) {
+    const t = await res.text();
+    throw new Error(`读取元数据失败: ${res.status} ${t}`);
+  }
   const json = await res.json();
-  const data = JSON.parse(atob(json.content));
+  const text = b64decodeUtf8(json.content);
+  const data = parseYaml(text);
   return { data, sha: json.sha };
 }
 
 async function writeMeta(env, data, sha) {
   const url = `https://api.github.com/repos/${env.GITHUB_REPO}/contents/${META_PATH}`;
+  const text = dataToYaml(data);
   const body = {
     message: 'Update emotes meta',
-    content: b64encodeUtf8(JSON.stringify(data, null, 2)),
+    content: b64encodeUtf8(text),
   };
   if (sha) body.sha = sha;
   const res = await fetch(url, {
@@ -102,7 +183,6 @@ async function setCategories(env, { file, categories }) {
 
 export default {
   async fetch(request, env) {
-    const url = new URL(request.url);
     const corsHeaders = {
       'Access-Control-Allow-Origin': '*',
       'Access-Control-Allow-Methods': 'POST, OPTIONS',
@@ -134,6 +214,23 @@ export default {
 
     const action = body.action;
     try {
+      // 诊断端点：检查 GitHub 配置与可达性
+      if (action === 'pingGithub') {
+        const info = { hasToken: !!env.GITHUB_TOKEN, repo: env.GITHUB_REPO, metaPath: META_PATH };
+        try {
+          const u = `https://api.github.com/repos/${env.GITHUB_REPO}/contents/${META_PATH}`;
+          const r = await fetch(u, { headers: await ghHeaders(env) });
+          info.githubStatus = r.status;
+          info.githubBody = (await r.text()).slice(0, 800);
+        } catch (e) {
+          info.fetchError = String(e && e.stack ? e.stack : e);
+        }
+        return new Response(JSON.stringify(info, null, 2), {
+          status: 200,
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        });
+      }
+
       if (action === 'upload') {
         const { name, ext, content, categories } = body;
         if (!content || typeof content !== 'string') {
@@ -179,7 +276,7 @@ export default {
         return new Response('Unknown action', { status: 400, headers: corsHeaders });
       }
     } catch (e) {
-      return new Response(`Error: ${e.message}`, { status: 502, headers: corsHeaders });
+      return new Response(`Error: ${e && e.message ? e.message : String(e)}`, { status: 502, headers: corsHeaders });
     }
   },
 };

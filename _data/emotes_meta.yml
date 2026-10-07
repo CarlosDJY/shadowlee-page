@@ -1,0 +1,38 @@
+items:
+  - file: "cute_白色奶龙.jpeg"
+    name: "白色奶龙"
+    categories:
+      - "cute"
+  - file: "GIF_看管人只会害了你_不要看管人啦.gif"
+    name: "看管人只会害了你_不要看管人啦"
+    categories:
+      - "GIF"
+      - "gif"
+  - file: "other_嚼大果.gif"
+    name: "嚼大果"
+    categories:
+      - "other"
+      - "gif"
+  - file: "other_转圈圈.gif"
+    name: "转圈圈"
+    categories:
+      - "other"
+      - "gif"
+  - file: "other_鼓脸.gif"
+    name: "鼓脸"
+    categories:
+      - "other"
+      - "gif"
+  - file: "可爱小李_李泡泡冲撞.gif"
+    name: "李泡泡冲撞"
+    categories:
+      - "可爱小李"
+      - "gif"
+  - file: "黑条遮眼.jpeg"
+    name: "黑条遮眼"
+    categories: []
+  - file: "啵啵小熊.gif"
+    name: "啵啵小熊"
+    categories:
+      - "cute"
+      - "gif"
