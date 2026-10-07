@@ -244,3 +244,7 @@ items:
     name: "广西小李"
     categories:
       - "熊猫"
+  - file: "摸鱼.jpg"
+    name: "摸鱼"
+    categories:
+      - "熊猫"
