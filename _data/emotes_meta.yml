@@ -164,3 +164,7 @@ items:
     name: "点子生成中"
     categories:
       - "熊猫"
+  - file: "我可是侄女_.jpg"
+    name: "我可是侄女！"
+    categories:
+      - "熊猫"
