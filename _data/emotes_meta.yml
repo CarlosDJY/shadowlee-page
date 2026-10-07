@@ -232,3 +232,7 @@ items:
     name: "摸摸耳朵"
     categories:
       - "熊猫"
+  - file: "吃瓜小李.jpg"
+    name: "吃瓜小李"
+    categories:
+      - "熊猫"
