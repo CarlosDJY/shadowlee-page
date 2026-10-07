@@ -176,3 +176,7 @@ items:
     name: "笑"
     categories:
       - "熊猫"
+  - file: "耳朵耳朵.jpg"
+    name: "耳朵耳朵"
+    categories:
+      - "熊猫"
