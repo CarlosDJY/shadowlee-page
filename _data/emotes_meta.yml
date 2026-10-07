@@ -208,3 +208,7 @@ items:
     name: "熊猫是猫"
     categories:
       - "cute"
+  - file: "魔法熊猫.jpg"
+    name: "魔法熊猫"
+    categories:
+      - "cute"
