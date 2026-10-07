@@ -148,3 +148,7 @@ items:
     name: "惊讶（打歌服）"
     categories:
       - "gif"
+  - file: "哈气.png"
+    name: "哈气"
+    categories:
+      - "熊猫"
