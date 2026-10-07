@@ -152,3 +152,7 @@ items:
     name: "哈气"
     categories:
       - "熊猫"
+  - file: "咬.jpg"
+    name: "咬"
+    categories:
+      - "熊猫"
