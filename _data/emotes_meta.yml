@@ -36,3 +36,102 @@ items:
     categories:
       - "cute"
       - "gif"
+  - file: "3D_煤气罐爆炸.gif"
+    name: "煤气罐爆炸"
+    categories:
+      - "3D"
+      - "gif"
+  - file: "3D_爱上我可是会似的哦.jpg"
+    name: "爱上我可是会似的哦"
+    categories:
+      - "3D"
+  - file: "小电视_404.jpg"
+    name: "404"
+    categories:
+      - "小电视"
+  - file: "小电视_摇摇晃晃.jpg"
+    name: "摇摇晃晃"
+    categories:
+      - "小电视"
+  - file: "小豆_小豆无语.jpg"
+    name: "小豆无语"
+    categories:
+      - "小豆"
+  - file: "小豆_黑.jpg"
+    name: "黑"
+    categories:
+      - "小豆"
+  - file: "熊猫_不想玩啦！.jpg"
+    name: "不想玩啦！"
+    categories:
+      - "熊猫"
+  - file: "熊猫_偷窥.jpg"
+    name: "偷窥"
+    categories:
+      - "熊猫"
+  - file: "熊猫_只是熊猫.jpg"
+    name: "只是熊猫"
+    categories:
+      - "熊猫"
+  - file: "熊猫_哭哭（1）.jpg"
+    name: "哭哭（1）"
+    categories:
+      - "熊猫"
+  - file: "熊猫_妈妈（1）！.jpg"
+    name: "妈妈（1）！"
+    categories:
+      - "熊猫"
+  - file: "熊猫_妈妈（2）.jpg"
+    name: "妈妈（2）"
+    categories:
+      - "熊猫"
+  - file: "熊猫_急急熊猫头.gif"
+    name: "急急熊猫头"
+    categories:
+      - "熊猫"
+      - "gif"
+  - file: "熊猫_搓搓熊猫.gif"
+    name: "搓搓熊猫"
+    categories:
+      - "熊猫"
+      - "gif"
+  - file: "熊猫_有姛！.jpg"
+    name: "有姛！"
+    categories:
+      - "熊猫"
+  - file: "熊猫_没眼看.jpg"
+    name: "没眼看"
+    categories:
+      - "熊猫"
+  - file: "熊猫_熊猫打滚.jpg"
+    name: "熊猫打滚"
+    categories:
+      - "熊猫"
+  - file: "熊猫_爱心.jpg"
+    name: "爱心"
+    categories:
+      - "熊猫"
+  - file: "熊猫_简易拉.jpg"
+    name: "简易拉"
+    categories:
+      - "熊猫"
+  - file: "熊猫_线条别走好吗.jpg"
+    name: "线条别走好吗"
+    categories:
+      - "熊猫"
+  - file: "熊猫_脸红.jpg"
+    name: "脸红"
+    categories:
+      - "熊猫"
+  - file: "熊猫_被指到的是姛.jpg"
+    name: "被指到的是姛"
+    categories:
+      - "熊猫"
+  - file: "熊猫_让我看看.jpg"
+    name: "让我看看"
+    categories:
+      - "熊猫"
+  - file: "熊猫_震惊.jpg"
+    name: "震惊"
+    categories:
+      - "熊猫"

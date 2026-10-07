@@ -57,23 +57,33 @@ description: 点击按钮播放语音 / 浏览表情
       </div>
     </div>
 
-    <!-- 分类筛选 -->
+    <!-- 分类筛选（根据 meta 中的实际分类动态生成） -->
+    {% assign meta = site.data.emotes_meta %}
+    {% assign dynamic_categories = "" | split: "" %}
+    {% for item in meta.items %}
+      {% for cat in item.categories %}
+        {% unless dynamic_categories contains cat %}
+          {% assign dynamic_categories = dynamic_categories | push: cat %}
+        {% endunless %}
+      {% endfor %}
+    {% endfor %}
     <div class="filter-bar">
       <span class="filter-label">按分类筛选：</span>
       <div class="filter-tags" id="emote-filters">
-        {% for cat in site.data.emotes.categories %}
-          <button class="filter-tag{% if forloop.first %} active{% endif %}" data-filter="{{ cat.id }}">{{ cat.name }}</button>
+        <button class="filter-tag active" data-filter="all">全部</button>
+        {% for cat in dynamic_categories %}
+          <button class="filter-tag" data-filter="{{ cat }}">{{ cat }}</button>
         {% endfor %}
+        <button class="filter-tag" data-filter="other">其他</button>
       </div>
       <button class="refresh-btn" id="refresh-emotes" title="刷新">↻</button>
     </div>
 
     <!-- 表情网格 -->
     <div class="emotes-grid" id="emotes-grid">
-      {% assign meta = site.data.emotes_meta %}
       {% if meta and meta.items and meta.items.size > 0 %}
         {% for item in meta.items %}
-          <div class="emote-card" data-categories="{{ item.categories | join: ',' }}" data-name="{{ item.name }}" data-src="{{ '/assets/images/emotes/' | append: item.file | relative_url }}">
+          <div class="emote-card" data-categories="{% if item.categories and item.categories.size > 0 %}{{ item.categories | join: ',' }}{% else %}other{% endif %}" data-name="{{ item.name }}" data-src="{{ '/assets/images/emotes/' | append: item.file | relative_url }}">
             <div class="emote-thumb">
               <img src="{{ '/assets/images/emotes/' | append: item.file | relative_url }}" alt="{{ item.name }}" loading="lazy">
             </div>
