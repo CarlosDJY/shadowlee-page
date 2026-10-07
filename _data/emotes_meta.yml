@@ -240,3 +240,7 @@ items:
     name: "蛋糕"
     categories:
       - "熊猫"
+  - file: "广西小李.jpg"
+    name: "广西小李"
+    categories:
+      - "熊猫"
