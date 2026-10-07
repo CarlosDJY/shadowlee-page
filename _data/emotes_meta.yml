@@ -204,3 +204,7 @@ items:
     name: "举手"
     categories:
       - "熊猫"
+  - file: "熊猫是猫.jpg"
+    name: "熊猫是猫"
+    categories:
+      - "cute"
