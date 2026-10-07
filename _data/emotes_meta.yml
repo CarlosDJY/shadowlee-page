@@ -264,3 +264,7 @@ items:
     name: "我是直女"
     categories:
       - "我是直女"
+  - file: "脸红李.jpg"
+    name: "脸红李"
+    categories:
+      - "熊猫"
