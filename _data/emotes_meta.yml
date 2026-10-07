@@ -156,3 +156,7 @@ items:
     name: "咬"
     categories:
       - "熊猫"
+  - file: "只是在看你_扶脸_.gif"
+    name: "只是在看你（扶脸）"
+    categories:
+      - "gif"
