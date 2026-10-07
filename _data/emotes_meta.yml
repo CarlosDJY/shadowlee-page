@@ -184,3 +184,7 @@ items:
     name: "耳朵飞飞"
     categories:
       - "熊猫"
+  - file: "帅.jpg"
+    name: "帅"
+    categories:
+      - "熊猫"
