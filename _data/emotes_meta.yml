@@ -160,3 +160,7 @@ items:
     name: "只是在看你（扶脸）"
     categories:
       - "gif"
+  - file: "点子生成中.jpg"
+    name: "点子生成中"
+    categories:
+      - "熊猫"
