@@ -272,3 +272,7 @@ items:
     name: "奶熊"
     categories:
       - "熊猫"
+  - file: "wink_.jpg"
+    name: "wink~"
+    categories:
+      - "熊猫"
