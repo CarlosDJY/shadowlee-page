@@ -192,3 +192,7 @@ items:
     name: "熊猫闹钟"
     categories:
       - "熊猫"
+  - file: "百合熊_.jpg"
+    name: "百合熊~"
+    categories:
+      - "熊猫"
