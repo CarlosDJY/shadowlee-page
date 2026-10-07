@@ -12,16 +12,6 @@ description: 点击按钮播放语音 / 浏览表情
   <div class="nav-container">
     <div class="nav-left">
       <a href="/" class="site-title">
-        <svg class="panda-logo" viewBox="0 0 64 64" width="34" height="34" aria-hidden="true">
-          <circle cx="32" cy="34" r="22" fill="#fff" stroke="#2b2b2b" stroke-width="3"/>
-          <circle cx="21" cy="23" r="7.5" fill="#2b2b2b"/>
-          <circle cx="43" cy="23" r="7.5" fill="#2b2b2b"/>
-          <circle cx="21" cy="23" r="3" fill="#fff"/>
-          <circle cx="43" cy="23" r="3" fill="#fff"/>
-          <ellipse cx="32" cy="39" rx="6" ry="4.5" fill="#2b2b2b"/>
-          <circle cx="25" cy="42" r="2" fill="#2b2b2b"/>
-          <circle cx="39" cy="42" r="2" fill="#2b2b2b"/>
-        </svg>
         <span>沙按钮</span>
       </a>
     </div>
