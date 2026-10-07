@@ -248,3 +248,7 @@ items:
     name: "摸鱼"
     categories:
       - "熊猫"
+  - file: "帅李.jpg"
+    name: "帅李"
+    categories:
+      - "熊猫"
