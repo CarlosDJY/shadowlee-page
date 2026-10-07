@@ -212,3 +212,7 @@ items:
     name: "魔法熊猫"
     categories:
       - "cute"
+  - file: "熊猫流汗.jpg"
+    name: "熊猫流汗"
+    categories:
+      - "熊猫"
