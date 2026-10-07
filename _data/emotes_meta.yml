@@ -268,3 +268,7 @@ items:
     name: "脸红李"
     categories:
       - "熊猫"
+  - file: "奶熊.jpg"
+    name: "奶熊"
+    categories:
+      - "熊猫"
