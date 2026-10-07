@@ -292,3 +292,7 @@ items:
     name: "点赞李"
     categories:
       - "熊猫"
+  - file: "可爱李.jpg"
+    name: "可爱李"
+    categories:
+      - "稿件"
