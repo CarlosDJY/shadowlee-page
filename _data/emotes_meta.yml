@@ -256,3 +256,7 @@ items:
     name: "kira李~"
     categories:
       - "熊猫"
+  - file: "被指到的是_.jpg"
+    name: "被指到的是？"
+    categories:
+      - "熊猫"
