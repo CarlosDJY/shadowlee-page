@@ -179,7 +179,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function filterEmotes(category) {
         emoteCards.forEach(card => {
-            if (category === 'all' || card.dataset.category === category) {
+            const cats = (card.dataset.categories || card.dataset.category || '').split(',');
+            if (category === 'all' || cats.includes(category)) {
                 card.style.display = 'block';
             } else {
                 card.style.display = 'none';
@@ -269,7 +270,8 @@ document.addEventListener('DOMContentLoaded', () => {
         localEmotes.forEach(file => {
             const card = document.createElement('div');
             card.className = 'emote-card local-emote-card';
-            card.dataset.category = file.category || 'other';
+            const cats = (file.categories && file.categories.length) ? file.categories : [file.category || 'other'];
+            card.dataset.categories = cats.join(',');
             card.dataset.name = file.name;
             card.dataset.src = file.dataUrl;
             card.innerHTML = `
@@ -329,6 +331,50 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     renderLocalFiles();
+
+    // ---- 表情分类管理 ----
+    async function saveCategories(file, categories) {
+        const workerUrl = window.UPLOAD_WORKER_URL;
+        if (!workerUrl) throw new Error('未配置上传 Worker');
+        const password = sessionStorage.getItem('shadowleeAdminPwd');
+        if (!password) throw new Error('请先登录');
+        const res = await fetch(workerUrl, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'x-upload-password': password },
+            body: JSON.stringify({ action: 'setCategories', file, categories }),
+        });
+        const text = await res.text();
+        if (!res.ok) throw new Error(text);
+        const item = (window.EMOTE_META.items || []).find(i => i.file === file);
+        if (item) item.categories = categories;
+    }
+
+    function renderManageCategories() {
+        const listEl = document.getElementById('manage-cat-list');
+        if (!listEl) return;
+        const meta = window.EMOTE_META || { items: [] };
+        listEl.innerHTML = '';
+        (meta.items || []).forEach(item => {
+            const row = document.createElement('div');
+            row.className = 'cat-row';
+            row.innerHTML = `<span class="cat-name">${item.name}</span>` +
+                `<input type="text" class="cat-input" value="${(item.categories || []).join(',')}" data-file="${item.file}">` +
+                `<button class="cat-save control-btn small">保存</button>`;
+            row.querySelector('.cat-save').addEventListener('click', async (e) => {
+                const input = e.target.previousElementSibling;
+                const cats = input.value.split(',').map(s => s.trim()).filter(Boolean);
+                try {
+                    await saveCategories(input.dataset.file, cats);
+                    alert('分类已更新，等待 Pages 自动部署后生效');
+                } catch (err) {
+                    alert('保存失败：' + err.message);
+                }
+            });
+            listEl.appendChild(row);
+        });
+    }
+
+    renderManageCategories();
 
     // 管理员登录
     const adminToggle = document.getElementById('admin-toggle');
@@ -407,22 +453,20 @@ document.addEventListener('DOMContentLoaded', () => {
 
     async function uploadFile(type, file, category, name) {
         const ext = file.name.split('.').pop() || (type === 'emote' ? 'png' : 'mp3');
-        const safeCat = safeFilename(category || 'other');
-        const safeName = safeFilename(name);
-        const path = type === 'emote'
-            ? `assets/images/emotes/${safeCat}_${safeName}.${ext}`
-            : `assets/audio/${safeCat}/${safeName}.${ext}`;
-
         const dataUrl = await readFileAsDataURL(file);
         const base64 = dataUrl.split(',')[1];
         const workerUrl = window.UPLOAD_WORKER_URL;
+
+        // 支持逗号分隔的多分类
+        const categories = (category || '').split(',').map(s => s.trim()).filter(Boolean);
 
         if (!workerUrl) {
             await saveLocalFile({
                 id: `${type}_${Date.now()}`,
                 type,
-                category: safeCat,
-                name: safeName,
+                category: categories[0] || 'other',
+                categories,
+                name,
                 dataUrl,
                 timestamp: Date.now()
             });
@@ -435,13 +479,14 @@ document.addEventListener('DOMContentLoaded', () => {
             return { ok: false };
         }
 
+        const action = type === 'emote' ? 'upload' : 'upload-voice';
         const res = await fetch(workerUrl, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
                 'x-upload-password': password,
             },
-            body: JSON.stringify({ path, content: base64 }),
+            body: JSON.stringify({ action, name, ext, content: base64, categories }),
         });
 
         const text = await res.text();

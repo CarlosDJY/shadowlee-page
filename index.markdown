@@ -70,30 +70,22 @@ description: 点击按钮播放语音 / 浏览表情
 
     <!-- 表情网格 -->
     <div class="emotes-grid" id="emotes-grid">
-      {% assign emote_files = site.static_files | where_exp:"file", "file.path contains '/assets/images/emotes/'" %}
-      {% if emote_files.size == 0 %}
+      {% assign meta = site.data.emotes_meta %}
+      {% if meta and meta.items and meta.items.size > 0 %}
+        {% for item in meta.items %}
+          <div class="emote-card" data-categories="{{ item.categories | join: ',' }}" data-name="{{ item.name }}" data-src="{{ '/assets/images/emotes/' | append: item.file | relative_url }}">
+            <div class="emote-thumb">
+              <img src="{{ '/assets/images/emotes/' | append: item.file | relative_url }}" alt="{{ item.name }}" loading="lazy">
+            </div>
+            <div class="emote-name">{{ item.name }}</div>
+          </div>
+        {% endfor %}
+      {% else %}
         <div class="empty-hint">
           还没有表情图片~<br>
-          把图片放到 <code>assets/images/emotes/</code>，文件名如 <code>cute_小哭米.png</code> 即可自动分类。
+          登录管理面板上传，或在 <code>assets/images/emotes/</code> 放入图片。
         </div>
       {% endif %}
-      {% for file in emote_files %}
-        {% assign filename = file.name | split: "." | first %}
-        {% assign underscore_pos = filename | split: "_" %}
-        {% if underscore_pos.size > 1 %}
-          {% assign emote_category = filename | split: "_" | first %}
-          {% assign emote_name = filename | replace_first: emote_category | remove_first: "_" %}
-        {% else %}
-          {% assign emote_category = "other" %}
-          {% assign emote_name = filename %}
-        {% endif %}
-        <div class="emote-card" data-category="{{ emote_category }}" data-name="{{ emote_name }}" data-src="{{ file.path | relative_url }}">
-          <div class="emote-thumb">
-            <img src="{{ file.path | relative_url }}" alt="{{ emote_name }}" loading="lazy">
-          </div>
-          <div class="emote-name">{{ emote_name }}</div>
-        </div>
-      {% endfor %}
     </div>
   </section>
 
@@ -177,6 +169,11 @@ description: 点击按钮播放语音 / 浏览表情
       <ul id="local-files-list"></ul>
       <button id="clear-local" class="control-btn small danger">清空本地缓存</button>
     </div>
+
+    <div class="manage-categories">
+      <h4>管理表情分类（支持多分类，用逗号分隔）</h4>
+      <div id="manage-cat-list"></div>
+    </div>
   </section>
 
   <!-- 密码弹窗 -->
@@ -208,5 +205,7 @@ description: 点击按钮播放语音 / 浏览表情
   window.SITE_BASE = "{{ '/' | relative_url }}";
   // Cloudflare Worker 上传服务地址
   window.UPLOAD_WORKER_URL = "https://shadowlee.1557852185.workers.dev";
+  // 表情元数据（构建时注入），用于分类管理与多分类渲染
+  window.EMOTE_META = {{ site.data.emotes_meta | jsonify }};
 </script>
 <script src="{{ '/assets/js/player.js' | relative_url }}" defer></script>
