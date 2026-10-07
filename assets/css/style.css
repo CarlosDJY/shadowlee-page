@@ -121,6 +121,27 @@ body {
     transform: scale(1.1);
 }
 
+.volume-hint {
+    color: var(--text-light);
+    font-size: 0.9em;
+    white-space: nowrap;
+    opacity: 0.85;
+}
+
+.listen-song {
+    color: #55aaff;
+    text-decoration: none;
+    border-bottom: 1px dashed #55aaff;
+    padding-bottom: 1px;
+    transition: all 0.2s;
+    white-space: nowrap;
+}
+
+.listen-song:hover {
+    color: #88ccff;
+    border-bottom-color: #88ccff;
+}
+
 .admin-link {
     background: transparent;
     border: 1px solid var(--border-color);

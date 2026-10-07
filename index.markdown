@@ -33,6 +33,13 @@ description: 点击按钮播放语音 / 浏览表情
           </svg>
         </a>
       </div>
+      <div class="nav-item volume-hint">请注意音量大小</div>
+      <div class="nav-item">
+        <a href="https://www.bilibili.com/video/BV12c411D7j4" target="_blank" rel="noopener" class="listen-song">点我听歌</a>
+      </div>
+      <div class="nav-item">
+        <a href="https://www.bilibili.com/video/BV1Z2bpznEag" target="_blank" rel="noopener" class="listen-song">支持百合厨女子的恋爱理论</a>
+      </div>
       <div class="nav-item">
         <button id="admin-toggle" class="admin-link">管理登录</button>
       </div>
