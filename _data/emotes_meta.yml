@@ -236,3 +236,7 @@ items:
     name: "吃瓜小李"
     categories:
       - "熊猫"
+  - file: "蛋糕.jpg"
+    name: "蛋糕"
+    categories:
+      - "熊猫"
