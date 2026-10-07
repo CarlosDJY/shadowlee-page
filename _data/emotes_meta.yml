@@ -224,3 +224,7 @@ items:
     name: "熊猫卖萌"
     categories:
       - "小大熊猫"
+  - file: "爱心小李.jpg"
+    name: "爱心小李"
+    categories:
+      - "熊猫"
