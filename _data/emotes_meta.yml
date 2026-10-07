@@ -216,3 +216,7 @@ items:
     name: "熊猫流汗"
     categories:
       - "熊猫"
+  - file: "顶天立地.jpg"
+    name: "顶天立地"
+    categories:
+      - "熊猫"
