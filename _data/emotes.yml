@@ -1,0 +1,20 @@
+# 表情分类配置（id 用于文件名前缀匹配，如 cute_小哭米.png 会归到 cute 类）
+categories:
+  - id: all
+    name: 全部
+  - id: 3d
+    name: 3D
+  - id: ani
+    name: ANI
+  - id: gif
+    name: GIF
+  - id: lve
+    name: LVE
+  - id: sii
+    name: SII
+  - id: cute
+    name: cute
+  - id: daily
+    name: 日常
+  - id: other
+    name: 其他

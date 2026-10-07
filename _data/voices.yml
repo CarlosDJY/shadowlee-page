@@ -1,0 +1,14 @@
+# 语音分类配置
+# Jekyll 会读取 assets/audio/<id>/ 目录下的音频文件，并用 name 作为分类标题
+# 如想改成截图里的「对话/日常/cute/歌（吗？）」，只需把音频文件移动/复制到对应 id 目录即可
+categories:
+  - id: mama
+    name: 豆沙妈妈
+  - id: baobao
+    name: 豆沙宝宝
+  - id: laogong
+    name: 豆沙老公
+  - id: jiejie
+    name: 豆沙姐姐
+  - id: other
+    name: 杂项语音

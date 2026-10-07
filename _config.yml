@@ -6,10 +6,10 @@ baseurl: "/shadowlee.github.io"
 # 构建设置
 markdown: kramdown
 permalink: pretty
-theme: minima  # 如果使用 minima 主题
-
-minima:
-  skin: classic
+# 不使用 minima 主题，使用完全自定义样式
+# theme: minima
+# minima:
+#   skin: classic
 
 # 插件
 plugins:
@@ -24,6 +24,8 @@ exclude:
   - Gemfile
   - Gemfile.lock
   - README.md
+  - _posts
+  - worker
 
 # 包含文件
 include:
