@@ -288,3 +288,7 @@ items:
     name: "委屈李"
     categories:
       - "熊猫"
+  - file: "点赞李.jpg"
+    name: "点赞李"
+    categories:
+      - "熊猫"
