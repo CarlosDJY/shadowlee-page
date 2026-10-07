@@ -280,3 +280,7 @@ items:
     name: "你们姛"
     categories:
       - "熊猫"
+  - file: "禁止_.jpg"
+    name: "禁止！"
+    categories:
+      - "熊猫"
