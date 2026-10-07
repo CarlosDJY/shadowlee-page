@@ -139,3 +139,8 @@ items:
   - file: "kimo猪.jpg"
     name: "kimo猪"
     categories: []
+  - file: "拳击熊猫.gif"
+    name: "拳击熊猫"
+    categories:
+      - "熊猫"
+      - "gif"
