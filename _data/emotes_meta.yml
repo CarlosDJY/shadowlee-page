@@ -284,3 +284,7 @@ items:
     name: "禁止！"
     categories:
       - "熊猫"
+  - file: "委屈李.jpg"
+    name: "委屈李"
+    categories:
+      - "熊猫"
