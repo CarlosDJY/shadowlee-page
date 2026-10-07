@@ -188,3 +188,7 @@ items:
     name: "帅"
     categories:
       - "熊猫"
+  - file: "熊猫闹钟.jpg"
+    name: "熊猫闹钟"
+    categories:
+      - "熊猫"
