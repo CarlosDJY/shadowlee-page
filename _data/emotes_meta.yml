@@ -180,3 +180,7 @@ items:
     name: "耳朵耳朵"
     categories:
       - "熊猫"
+  - file: "耳朵飞飞.jpg"
+    name: "耳朵飞飞"
+    categories:
+      - "熊猫"
