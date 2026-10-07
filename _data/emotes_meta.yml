@@ -252,3 +252,7 @@ items:
     name: "帅李"
     categories:
       - "熊猫"
+  - file: "kira李_.jpg"
+    name: "kira李~"
+    categories:
+      - "熊猫"
