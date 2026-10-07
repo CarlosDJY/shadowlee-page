@@ -228,3 +228,7 @@ items:
     name: "爱心小李"
     categories:
       - "熊猫"
+  - file: "摸摸耳朵.jpg"
+    name: "摸摸耳朵"
+    categories:
+      - "熊猫"
