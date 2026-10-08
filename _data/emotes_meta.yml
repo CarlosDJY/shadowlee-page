@@ -301,3 +301,8 @@ items:
     categories:
       - "可爱"
       - "gif"
+  - file: "只是旋转.gif"
+    name: "只是旋转"
+    categories:
+      - "可爱"
+      - "gif"
