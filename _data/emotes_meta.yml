@@ -296,3 +296,8 @@ items:
     name: "可爱李"
     categories:
       - "稿件"
+  - file: "变身偶像李.gif"
+    name: "变身偶像李"
+    categories:
+      - "可爱"
+      - "gif"
