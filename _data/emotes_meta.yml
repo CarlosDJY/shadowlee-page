@@ -316,8 +316,9 @@ items:
     categories:
       - "熊猫"
   - file: "02daf3ab921e807633617ac57c6781f7_0.png"
-    name: "02daf3ab921e807633617ac57c6781f7_0"
-    categories: []
+    name: "？"
+    categories:
+      - "熊猫"
   - file: "0848bb45311414352455fda00dc79535.png"
     name: "0848bb45311414352455fda00dc79535"
     categories: []
