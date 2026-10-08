@@ -531,7 +531,7 @@ items:
     name: "好"
     categories: []
   - file: "帅.png"
-    name: "帅"
+    name: "帅__tmp__"
     categories: []
   - file: "思考.png"
     name: "思考"
