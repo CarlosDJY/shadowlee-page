@@ -320,8 +320,9 @@ items:
     categories:
       - "熊猫"
   - file: "0848bb45311414352455fda00dc79535.png"
-    name: "0848bb45311414352455fda00dc79535"
-    categories: []
+    name: "别走好吗；；"
+    categories:
+      - "熊猫"
   - file: "08bdfd3305fe8dadf8e1d1cd60440382_0.png"
     name: "08bdfd3305fe8dadf8e1d1cd60440382_0"
     categories: []
