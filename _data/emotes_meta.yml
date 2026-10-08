@@ -312,45 +312,42 @@ items:
       - "熊猫"
       - "gif"
   - file: "0267b3761cd132ce54e075e6f06b696a.png"
-    name: "熊猫昏睡"
-    categories:
-      - "熊猫"
+    name: "熊猫_墨镜睡觉"
+    categories: []
   - file: "02daf3ab921e807633617ac57c6781f7_0.png"
     name: "？"
     categories:
       - "熊猫"
   - file: "0848bb45311414352455fda00dc79535.png"
-    name: "别走好吗；；"
-    categories:
-      - "熊猫"
+    name: "熊猫_别走好吗"
+    categories: []
   - file: "08bdfd3305fe8dadf8e1d1cd60440382_0.png"
     name: "被指到的是~（2）"
     categories:
       - "熊猫"
   - file: "0bea4156d69e06882797d7838e9d16e1.png"
-    name: "展示环节~"
-    categories:
-      - "熊猫"
+    name: "熊猫_微笑回眸"
+    categories: []
   - file: "0f89280fcd855c281bd0208003a2959d.jpg"
-    name: "0f89280fcd855c281bd0208003a2959d"
+    name: "熊猫_晕"
     categories: []
   - file: "11d21791dfe1a187282eb855f902ba1a.jpg"
-    name: "11d21791dfe1a187282eb855f902ba1a"
+    name: "熊猫_侄女"
     categories: []
   - file: "12aac7e8390bc3937bbe625914e5f64e.jpg"
-    name: "12aac7e8390bc3937bbe625914e5f64e"
+    name: "熊猫_Wink举牌"
     categories: []
   - file: "14c65c469b227da54f29d3d0174901f5.jpg"
-    name: "14c65c469b227da54f29d3d0174901f5"
+    name: "熊猫_墨镜大笑"
     categories: []
   - file: "175866f892481a5b9c5ecd86a29c7912.jpg"
-    name: "175866f892481a5b9c5ecd86a29c7912"
+    name: "熊猫_小巫师"
     categories: []
   - file: "19669eedad69bf61a01f5745539b3352.png"
-    name: "19669eedad69bf61a01f5745539b3352"
+    name: "熊猫_贡丸"
     categories: []
   - file: "1b02984b1432ff9d14d0c87a7602867f.png"
-    name: "1b02984b1432ff9d14d0c87a7602867f"
+    name: "熊猫_戴耳机"
     categories: []
   - file: "1e96f1308157e685d612b33e5c1bebae.jpg"
     name: "1e96f1308157e685d612b33e5c1bebae"
