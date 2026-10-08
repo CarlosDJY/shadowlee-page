@@ -531,7 +531,7 @@ items:
     name: "好"
     categories: []
   - file: "帅.png"
-    name: "帅__tmp__"
+    name: "帅"
     categories: []
   - file: "思考.png"
     name: "思考"
@@ -546,7 +546,7 @@ items:
     name: "晚安"
     categories: []
   - file: "比耶.jpg"
-    name: "比耶__tmp__"
+    name: "比耶"
     categories: []
   - file: "炒菜.png"
     name: "炒菜"
