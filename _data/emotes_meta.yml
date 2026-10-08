@@ -324,8 +324,9 @@ items:
     categories:
       - "熊猫"
   - file: "08bdfd3305fe8dadf8e1d1cd60440382_0.png"
-    name: "08bdfd3305fe8dadf8e1d1cd60440382_0"
-    categories: []
+    name: "被指到的是~（2）"
+    categories:
+      - "熊猫"
   - file: "0bea4156d69e06882797d7838e9d16e1.png"
     name: "0bea4156d69e06882797d7838e9d16e1"
     categories: []
