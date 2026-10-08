@@ -168,20 +168,6 @@ description: 点击按钮播放语音 / 浏览表情
     </div>
   </section>
 
-  <!-- 游戏弹窗 -->
-  <div id="game-modal" class="game-modal" style="display:none;" aria-hidden="true">
-    <div class="game-modal-backdrop" data-close-modal></div>
-    <div class="game-modal-content">
-      <button class="game-modal-close" data-close-modal aria-label="关闭">&times;</button>
-      <div class="game-modal-body" id="game-modal-body">
-        <div class="game-instance" id="game-slot" data-game="slot">
-          <h2 class="game-title">熊猫老虎机</h2>
-          <div class="slot-machine">
-            <div class="slot-modes">
-              <button class="slot-mode active" data-mode="easy">简单（3图）</button>
-              <button class="slot-mode" data-mode="normal">普通（4图）</button>
-              <button class="slot-mode" data-mode="hard">困难（5图）</button>
-            </div>
             <div class="slot-reels" id="slot-reels"></div>
             <div class="slot-controls">
               <div class="slot-info">得分：<span id="slot-score">0</span> / 1000</div>
@@ -284,7 +270,23 @@ description: 点击按钮播放语音 / 浏览表情
   </footer>
 </div>
 
-<link rel="stylesheet" href="{{ '/assets/css/style.css' | relative_url }}">
+  <!-- 游戏弹窗 -->
+  <div id="game-modal" class="game-modal" style="display:none;" aria-hidden="true">
+    <div class="game-modal-backdrop" data-close-modal></div>
+    <div class="game-modal-content">
+      <button class="game-modal-close" data-close-modal aria-label="关闭">&times;</button>
+      <div class="game-modal-body" id="game-modal-body">
+        <div class="game-instance" id="game-slot" data-game="slot">
+          <h2 class="game-title">熊猫老虎机</h2>
+          <div class="slot-machine">
+            <div class="slot-modes">
+              <button class="slot-mode active" data-mode="easy">简单（3图）</button>
+              <button class="slot-mode" data-mode="normal">普通（4图）</button>
+              <button class="slot-mode" data-mode="hard">困难（5图）</button>
+            </div>
+
+
+<link rel="stylesheet" href="{{ '/assets/css/style.css' | relative_url }}?v=2">
 <script>
   window.SITE_BASE = "{{ '/' | relative_url }}";
   // Cloudflare Worker 上传服务地址
@@ -292,9 +294,9 @@ description: 点击按钮播放语音 / 浏览表情
   // 表情元数据（构建时注入），用于分类管理与多分类渲染
   window.EMOTE_META = {{ site.data.emotes_meta | jsonify }};
 </script>
-<script src="{{ '/assets/js/player.js' | relative_url }}" defer></script>
-<script src="{{ '/assets/js/game-modal.js' | relative_url }}" defer></script>
-<script src="{{ '/assets/js/game-slot.js' | relative_url }}" defer></script>
-<script src="{{ '/assets/js/game-breakout.js' | relative_url }}" defer></script>
-<script src="{{ '/assets/js/game-merge.js' | relative_url }}" defer></script>
-<script src="{{ '/assets/js/game-flappy.js' | relative_url }}" defer></script>
+<script src="{{ '/assets/js/player.js' | relative_url }}?v=2" defer></script>
+<script src="{{ '/assets/js/game-modal.js' | relative_url }}?v=2" defer></script>
+<script src="{{ '/assets/js/game-slot.js' | relative_url }}?v=2" defer></script>
+<script src="{{ '/assets/js/game-breakout.js' | relative_url }}?v=2" defer></script>
+<script src="{{ '/assets/js/game-merge.js' | relative_url }}?v=2" defer></script>
+<script src="{{ '/assets/js/game-flappy.js' | relative_url }}?v=2" defer></script>
