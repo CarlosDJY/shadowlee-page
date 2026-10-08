@@ -38,6 +38,8 @@
 
     function buildReels() {
       const count = MODES[mode].reels;
+      // 4 图用 2x2 布局，3/5 图保持 3 列（5 图为 3+2）
+      reelsRoot.style.gridTemplateColumns = (count === 4) ? 'repeat(2, 1fr)' : 'repeat(3, 1fr)';
       reelsRoot.innerHTML = Array.from({ length: count }, (_, i) =>
         `<div class="slot-reel"><img id="slot-r${i}" src="${symbolSrc(rand(all))}" alt="reel"></div>`
       ).join('');
@@ -118,10 +120,8 @@
 
     buildReels();
 
-    if (window.__gameHooks) {
-      window.__gameHooks.slot = (action) => {
-        if (action === 'open') resetGame();
-      };
-    }
+    window.__gameHooks.slot = (action) => {
+      if (action === 'open') resetGame();
+    };
   });
 })();

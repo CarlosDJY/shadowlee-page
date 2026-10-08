@@ -2,6 +2,7 @@
  * 游戏卡片 + 弹窗逻辑
  */
 (function () {
+  window.__gameHooks = window.__gameHooks || {};
   const modal = document.getElementById('game-modal');
   const modalBody = document.getElementById('game-modal-body');
   const cards = document.querySelectorAll('.game-card');
