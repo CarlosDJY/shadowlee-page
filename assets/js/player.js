@@ -332,8 +332,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     renderLocalFiles();
 
-    // ---- 表情分类管理 ----
-    async function saveCategories(file, categories) {
+    // ---- 表情管理（改名 + 多分类） ----
+    async function updateEmoteMeta(file, name, categories) {
         const workerUrl = window.UPLOAD_WORKER_URL;
         if (!workerUrl) throw new Error('未配置上传 Worker');
         const password = sessionStorage.getItem('shadowleeAdminPwd');
@@ -341,12 +341,15 @@ document.addEventListener('DOMContentLoaded', () => {
         const res = await fetch(workerUrl, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json', 'x-upload-password': password },
-            body: JSON.stringify({ action: 'setCategories', file, categories }),
+            body: JSON.stringify({ action: 'updateMeta', file, name, categories }),
         });
         const text = await res.text();
         if (!res.ok) throw new Error(text);
         const item = (window.EMOTE_META.items || []).find(i => i.file === file);
-        if (item) item.categories = categories;
+        if (item) {
+            item.name = name;
+            item.categories = categories;
+        }
     }
 
     function renderManageCategories() {
@@ -354,18 +357,27 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!listEl) return;
         const meta = window.EMOTE_META || { items: [] };
         listEl.innerHTML = '';
+        const base = (window.SITE_BASE || '/').replace(/\/$/, '');
         (meta.items || []).forEach(item => {
             const row = document.createElement('div');
             row.className = 'cat-row';
-            row.innerHTML = `<span class="cat-name">${item.name}</span>` +
-                `<input type="text" class="cat-input" value="${(item.categories || []).join(',')}" data-file="${item.file}">` +
-                `<button class="cat-save control-btn small">保存</button>`;
+            const imgSrc = `${base}/assets/images/emotes/${encodeURIComponent(item.file)}`;
+            row.innerHTML = `
+                <img class="manage-thumb" src="${imgSrc}" alt="${item.name}" loading="lazy">
+                <input type="text" class="manage-name-input" value="${item.name}" placeholder="名字" data-file="${item.file}">
+                <input type="text" class="manage-cat-input" value="${(item.categories || []).join(',')}" placeholder="分类，逗号分隔" data-file="${item.file}">
+                <button class="cat-save control-btn small">保存</button>
+            `;
             row.querySelector('.cat-save').addEventListener('click', async (e) => {
-                const input = e.target.previousElementSibling;
-                const cats = input.value.split(',').map(s => s.trim()).filter(Boolean);
+                const row = e.target.closest('.cat-row');
+                const nameInput = row.querySelector('.manage-name-input');
+                const catInput = row.querySelector('.manage-cat-input');
+                const name = nameInput.value.trim();
+                const cats = catInput.value.split(',').map(s => s.trim()).filter(Boolean);
+                if (!name) { alert('名字不能为空'); return; }
                 try {
-                    await saveCategories(input.dataset.file, cats);
-                    alert('分类已更新，等待 Pages 自动部署后生效');
+                    await updateEmoteMeta(item.file, name, cats);
+                    alert('已保存，等待 Pages 自动部署后生效');
                 } catch (err) {
                     alert('保存失败：' + err.message);
                 }

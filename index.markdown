@@ -181,7 +181,7 @@ description: 点击按钮播放语音 / 浏览表情
     </div>
 
     <div class="manage-categories">
-      <h4>管理表情分类（支持多分类，用逗号分隔）</h4>
+      <h4>管理表情（支持改名与多分类，用逗号分隔）</h4>
       <div id="manage-cat-list"></div>
     </div>
   </section>

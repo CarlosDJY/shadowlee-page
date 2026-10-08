@@ -693,6 +693,53 @@ body {
     opacity: 0.9;
 }
 
+/* 表情管理列表（改名 + 多分类） */
+.cat-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.cat-row:last-child {
+    border-bottom: none;
+}
+
+.manage-thumb {
+    width: 56px;
+    height: 56px;
+    object-fit: cover;
+    border-radius: 8px;
+    background: #eef2ff;
+    flex-shrink: 0;
+    border: 1px solid var(--border-color);
+}
+
+.manage-name-input,
+.manage-cat-input {
+    padding: 8px 10px;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    font-size: 0.9em;
+    background: #f3f6ff;
+    color: var(--text-color);
+}
+
+.manage-name-input {
+    flex: 0 0 160px;
+    min-width: 100px;
+}
+
+.manage-cat-input {
+    flex: 1;
+    min-width: 140px;
+}
+
+.cat-save {
+    flex-shrink: 0;
+}
+
 /* 响应式 */
 @media (max-width: 768px) {
     .navbar {
@@ -720,6 +767,21 @@ body {
     .voice-controls {
         flex-direction: column;
         align-items: flex-start;
+    }
+
+    .cat-row {
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+
+    .manage-thumb {
+        width: 48px;
+        height: 48px;
+    }
+
+    .manage-name-input,
+    .manage-cat-input {
+        flex: 1 1 40%;
     }
 }
 

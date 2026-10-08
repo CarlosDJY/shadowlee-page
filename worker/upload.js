@@ -181,6 +181,18 @@ async function setCategories(env, { file, categories }) {
   return file;
 }
 
+async function updateMeta(env, { file, name, categories }) {
+  const { data, sha } = await readMeta(env);
+  const item = (data.items || []).find(i => i.file === file);
+  if (!item) throw new Error(`未找到表情: ${file}`);
+  if (typeof name === 'string' && name.trim()) item.name = name.trim();
+  let cats = Array.isArray(categories) ? [...new Set(categories)] : [];
+  if (file.toLowerCase().endsWith('.gif') && !cats.includes('gif')) cats.push('gif'); // gif 默认保留 gif 分类
+  item.categories = cats;
+  await writeMeta(env, data, sha);
+  return file;
+}
+
 export default {
   async fetch(request, env) {
     const corsHeaders = {
@@ -245,6 +257,14 @@ export default {
         const { file, categories } = body;
         if (!file) return new Response('Missing file', { status: 400, headers: corsHeaders });
         const updated = await setCategories(env, { file, categories });
+        return new Response(JSON.stringify({ ok: true, file: updated }), {
+          status: 200,
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        });
+      } else if (action === 'updateMeta') {
+        const { file, name, categories } = body;
+        if (!file) return new Response('Missing file', { status: 400, headers: corsHeaders });
+        const updated = await updateMeta(env, { file, name, categories });
         return new Response(JSON.stringify({ ok: true, file: updated }), {
           status: 200,
           headers: { ...corsHeaders, 'Content-Type': 'application/json' },
