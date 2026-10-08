@@ -651,10 +651,14 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // 刷新按钮（重新触发筛选）
+    // 随机挑选一个表情到上方预览区
     document.getElementById('refresh-emotes')?.addEventListener('click', () => {
-        const active = document.querySelector('.filter-tag.active');
-        filterEmotes(active ? active.dataset.filter : 'all');
+        const visible = Array.from(document.querySelectorAll('.emote-card')).filter(c => c.style.display !== 'none');
+        if (visible.length === 0) return;
+        const randomCard = visible[Math.floor(Math.random() * visible.length)];
+        emoteCards.forEach(c => c.classList.remove('active'));
+        randomCard.classList.add('active');
+        setPreview(randomCard.dataset.name, randomCard.dataset.src);
     });
 
     // 随机切换 space 背景图

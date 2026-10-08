@@ -41,6 +41,7 @@ description: 点击按钮播放语音 / 浏览表情
 <div class="tab-bar">
   <button class="tab-btn active" data-tab="emotes">表情</button>
   <button class="tab-btn" data-tab="voices">语音</button>
+  <button class="tab-btn" data-tab="games">游戏</button>
 </div>
 
 <!-- 主内容区域 -->
@@ -76,7 +77,7 @@ description: 点击按钮播放语音 / 浏览表情
         {% endfor %}
         <button class="filter-tag" data-filter="other">其他</button>
       </div>
-      <button class="refresh-btn" id="refresh-emotes" title="刷新">↻</button>
+      <button class="refresh-btn" id="refresh-emotes" title="随机挑选一个表情包到上面">↻</button>
     </div>
 
     <!-- 表情网格 -->
@@ -138,6 +139,40 @@ description: 点击按钮播放语音 / 浏览表情
           </section>
         {% endif %}
       {% endfor %}
+    </div>
+  </section>
+
+  <!-- 游戏面板 -->
+  <section id="games-panel" class="tab-panel">
+    <div class="games-container">
+      <h2 class="game-title">熊猫老虎机</h2>
+      <div class="slot-machine">
+        <div class="slot-reels" id="slot-reels">
+          <div class="slot-reel"><img src="" alt="?" id="reel-0"></div>
+          <div class="slot-reel"><img src="" alt="?" id="reel-1"></div>
+          <div class="slot-reel"><img src="" alt="?" id="reel-2"></div>
+        </div>
+        <div class="slot-controls">
+          <div class="slot-info">余额：<span id="slot-balance">1000</span>　押注：<span id="slot-current-bet">50</span></div>
+          <div class="slot-bet-buttons">
+            <button class="bet-btn" data-bet="10">10</button>
+            <button class="bet-btn active" data-bet="50">50</button>
+            <button class="bet-btn" data-bet="100">100</button>
+          </div>
+          <button id="slot-spin" class="control-btn big">开始</button>
+          <div id="slot-result" class="slot-result"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="games-container">
+      <h2 class="game-title">熊猫三维弹球</h2>
+      <canvas id="panda-pinball" width="480" height="640"></canvas>
+      <div class="pinball-controls">
+        <button id="pinball-start" class="control-btn big">开始</button>
+        <div class="pinball-score">得分：<span id="pinball-score">0</span></div>
+      </div>
+      <p class="pinball-tip">移动鼠标或触摸控制挡板，让熊猫球在三维桌面上弹跳得分。</p>
     </div>
   </section>
 
@@ -217,3 +252,4 @@ description: 点击按钮播放语音 / 浏览表情
   window.EMOTE_META = {{ site.data.emotes_meta | jsonify }};
 </script>
 <script src="{{ '/assets/js/player.js' | relative_url }}" defer></script>
+<script src="{{ '/assets/js/games.js' | relative_url }}" defer></script>
