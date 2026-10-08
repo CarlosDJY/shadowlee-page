@@ -306,3 +306,8 @@ items:
     categories:
       - "可爱"
       - "gif"
+  - file: "小豆无语.gif"
+    name: "小豆无语"
+    categories:
+      - "熊猫"
+      - "gif"
