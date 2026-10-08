@@ -1,6 +1,6 @@
 /**
  * 李豆沙 Flappy - 熊猫版 Flappy Bird
- * 小鸟使用「魔法熊猫」表情，纯前端实现
+ * 小鸟使用「魔法熊猫」表情，难度随得分逐步提升
  */
 (function () {
   'use strict';
@@ -24,13 +24,13 @@
 
     const GROUND_H = 60;
     const BIRD_X = 80;
-    const BIRD_R = 18;
-    const GRAVITY = 0.45;
-    const JUMP = -7.5;
+    const BIRD_R = 24; // 比之前大
+    const GRAVITY = 0.35;
+    const JUMP = -6.5;
     const PIPE_W = 60;
-    const GAP = 160;
-    const PIPE_SPEED = 2.6;
-    const PIPE_INTERVAL = 95; // 帧
+    const GAP_BASE = 190; // 初始缺口更大，更简单
+    const PIPE_SPEED_BASE = 2.0;
+    const PIPE_INTERVAL_BASE = 115; // 管道间隔更大
 
     let bird, pipes, score, best, frame, running, gameOver, rafId;
     best = parseInt(localStorage.getItem('flappy_best') || '0', 10);
@@ -50,10 +50,20 @@
       bird.vy = JUMP;
     }
 
+    // 难度随得分越来越高
+    function difficulty() {
+      return {
+        speed: PIPE_SPEED_BASE + score * 0.06,
+        gap: Math.max(120, GAP_BASE - score * 2.5),
+        interval: Math.max(70, PIPE_INTERVAL_BASE - score * 1.5),
+      };
+    }
+
     function spawnPipe() {
+      const d = difficulty();
       const margin = 60;
-      const gapTop = margin + Math.random() * (H - GROUND_H - GAP - margin * 2);
-      pipes.push({ x: W, gapTop });
+      const gapTop = margin + Math.random() * (H - GROUND_H - d.gap - margin * 2);
+      pipes.push({ x: W, gapTop, gap: d.gap });
     }
 
     function rectHit(bx, by, br, rx, ry, rw, rh) {
@@ -68,12 +78,13 @@
       frame++;
       bird.vy += GRAVITY;
       bird.y += bird.vy;
-      bird.rot = Math.max(-0.5, Math.min(1.2, bird.vy / 10));
+      bird.rot = Math.max(-0.5, Math.min(1.2, bird.vy / 12));
 
-      if (frame % PIPE_INTERVAL === 0) spawnPipe();
+      const d = difficulty();
+      if (frame % Math.round(d.interval) === 0) spawnPipe();
 
       for (const p of pipes) {
-        p.x -= PIPE_SPEED;
+        p.x -= d.speed;
         // 计分：鸟越过管道中心
         if (!p.passed && p.x + PIPE_W < BIRD_X - BIRD_R) {
           p.passed = true;
@@ -81,7 +92,7 @@
         }
         // 碰撞
         const hitTop = rectHit(BIRD_X, bird.y, BIRD_R, p.x, 0, PIPE_W, p.gapTop);
-        const hitBottom = rectHit(BIRD_X, bird.y, BIRD_R, p.x, p.gapTop + GAP, PIPE_W, H - GROUND_H - (p.gapTop + GAP));
+        const hitBottom = rectHit(BIRD_X, bird.y, BIRD_R, p.x, p.gapTop + p.gap, PIPE_W, H - GROUND_H - (p.gapTop + p.gap));
         if (hitTop || hitBottom) die();
       }
       pipes = pipes.filter(p => p.x + PIPE_W > -10);
@@ -105,13 +116,14 @@
       ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
 
       // 管道
+      const d = difficulty();
       ctx.fillStyle = '#5bbf5b';
       ctx.strokeStyle = '#3a8f3a';
       ctx.lineWidth = 3;
       for (const p of pipes) {
         ctx.fillRect(p.x, 0, PIPE_W, p.gapTop);
         ctx.strokeRect(p.x, 0, PIPE_W, p.gapTop);
-        const bottomY = p.gapTop + GAP;
+        const bottomY = p.gapTop + p.gap;
         ctx.fillRect(p.x, bottomY, PIPE_W, H - GROUND_H - bottomY);
         ctx.strokeRect(p.x, bottomY, PIPE_W, H - GROUND_H - bottomY);
       }
@@ -128,6 +140,8 @@
       ctx.rotate(bird.rot);
       if (birdImg && birdImg.complete && birdImg.naturalWidth) {
         const s = BIRD_R * 2;
+        // 原表情图片方向可能反了，这里垂直翻转
+        ctx.scale(1, -1);
         ctx.drawImage(birdImg, -s / 2, -s / 2, s, s);
       } else {
         ctx.fillStyle = '#f5c542';

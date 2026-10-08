@@ -396,19 +396,6 @@
       } else {
         this.drawDefaultFruit(fruit);
       }
-
-      if (fruit.radius > 18) {
-        this.ctx.fillStyle = '#FFF';
-        this.ctx.font = `bold ${Math.max(10, fruit.radius / 3)}px sans-serif`;
-        this.ctx.textAlign = 'center';
-        this.ctx.textBaseline = 'middle';
-        this.ctx.strokeStyle = 'rgba(0,0,0,0.6)';
-        this.ctx.lineWidth = 3;
-        const name = this.emoteTypes[fruit.type].name;
-        this.ctx.strokeText(name, fruit.x, fruit.y);
-        this.ctx.fillText(name, fruit.x, fruit.y);
-        this.ctx.textBaseline = 'alphabetic';
-      }
     }
 
     drawDefaultFruit(fruit) {

@@ -150,10 +150,10 @@ description: 点击按钮播放语音 / 浏览表情
         <h3>熊猫老虎机</h3>
         <p>拉动拉杆，三个相同表情赢大奖</p>
       </div>
-      <div class="game-card" data-game="pinball" tabindex="0" role="button" aria-label="打开熊猫弹球">
-        <div class="game-card-icon">🎱</div>
-        <h3>熊猫弹球</h3>
-        <p>弹球碰撞，挑战最高分</p>
+      <div class="game-card" data-game="breakout" tabindex="0" role="button" aria-label="打开熊猫打砖块">
+        <div class="game-card-icon">🧱</div>
+        <h3>熊猫打砖块</h3>
+        <p>消除砖块，挑战关卡</p>
       </div>
       <div class="game-card" data-game="merge" tabindex="0" role="button" aria-label="打开合成熊猫">
         <div class="game-card-icon">🐼</div>
@@ -177,24 +177,29 @@ description: 点击按钮播放语音 / 浏览表情
         <div class="game-instance" id="game-slot" data-game="slot">
           <h2 class="game-title">熊猫老虎机</h2>
           <div class="slot-machine">
+            <div class="slot-modes">
+              <button class="slot-mode active" data-mode="easy">简单（3图）</button>
+              <button class="slot-mode" data-mode="normal">普通（4图）</button>
+              <button class="slot-mode" data-mode="hard">困难（5图）</button>
+            </div>
             <div class="slot-reels" id="slot-reels"></div>
             <div class="slot-controls">
-              <div class="slot-info">余额：<span id="slot-coins">100</span></div>
-              <button id="slot-spin" class="control-btn big">旋转 (5)</button>
+              <div class="slot-info">得分：<span id="slot-score">0</span> / 1000</div>
+              <button id="slot-spin" class="control-btn big">旋转</button>
+              <button id="slot-reset" class="control-btn">重开</button>
               <div id="slot-result" class="slot-result"></div>
             </div>
           </div>
         </div>
 
-        <div class="game-instance" id="game-pinball" data-game="pinball">
-          <h2 class="game-title">熊猫弹球</h2>
-          <canvas id="pinball-canvas" width="420" height="620"></canvas>
-          <div class="pinball-controls">
-            <button id="pinball-start" class="control-btn big">发射</button>
-            <button id="pinball-restart" class="control-btn big">重开</button>
-            <div class="pinball-score">得分：<span id="pinball-score">0</span></div>
+        <div class="game-instance" id="game-breakout" data-game="breakout">
+          <h2 class="game-title">熊猫打砖块</h2>
+          <canvas id="breakout-canvas" width="420" height="620"></canvas>
+          <div class="breakout-controls">
+            <button id="breakout-start" class="control-btn big">开始</button>
+            <div class="breakout-score">得分：<span id="breakout-score">0</span></div>
           </div>
-          <p class="pinball-tip">点击发射，用 ← → 键控制挡板，不要让球掉下去。</p>
+          <p class="breakout-tip">移动鼠标/手指控制挡板，击碎所有砖块进入下一关。</p>
         </div>
 
         <div class="game-instance" id="game-merge" data-game="merge">
@@ -290,6 +295,6 @@ description: 点击按钮播放语音 / 浏览表情
 <script src="{{ '/assets/js/player.js' | relative_url }}" defer></script>
 <script src="{{ '/assets/js/game-modal.js' | relative_url }}" defer></script>
 <script src="{{ '/assets/js/game-slot.js' | relative_url }}" defer></script>
-<script src="{{ '/assets/js/game-pinball.js' | relative_url }}" defer></script>
+<script src="{{ '/assets/js/game-breakout.js' | relative_url }}" defer></script>
 <script src="{{ '/assets/js/game-merge.js' | relative_url }}" defer></script>
 <script src="{{ '/assets/js/game-flappy.js' | relative_url }}" defer></script>

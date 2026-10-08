@@ -1,99 +1,126 @@
 /**
- * 熊猫老虎机 - 基于开源 jsubroto/slot-machine (MIT) 改造
- * 符号换成表情图片
+ * 熊猫老虎机 - 三种难度模式
+ * 简单 3 图 / 普通 4 图 / 困难 5 图，累计到 1000 分胜利
  */
 (function () {
   'use strict';
   const base = (window.SITE_BASE || '/').replace(/\/$/, '');
 
   window.addEventListener('load', () => {
-    const COST = 5;
-    const START_COINS = 100;
-    const REEL_COUNT = 3;
-
-    const meta = window.EMOTE_META || { items: [] };
-    const all = meta.items.filter(i => i.file && !i.file.toLowerCase().endsWith('.gif'));
-    const symbols = all.slice(0, 6);
-    if (symbols.length < 3) return;
-
-    const payouts = {};
-    const payValues = [10, 15, 20, 30, 50, 100];
-    symbols.forEach((s, i) => { payouts[s.file] = payValues[i % payValues.length]; });
-
-    const randSymbol = () => symbols[Math.floor(Math.random() * symbols.length)];
-    const sleep = (ms) => new Promise(r => setTimeout(r, ms));
+    const META = window.EMOTE_META || { items: [] };
+    const all = META.items.filter(i => i.file && !i.file.toLowerCase().endsWith('.gif'));
+    if (all.length < 2) return;
 
     const reelsRoot = document.getElementById('slot-reels');
-    if (!reelsRoot) return;
-
-    reelsRoot.innerHTML = Array.from({ length: REEL_COUNT }, (_, i) =>
-      `<div class="slot-reel"><img id="slot-r${i + 1}" src="" alt="reel"></div>`
-    ).join('');
-
-    const reels = Array.from({ length: REEL_COUNT }, (_, i) => document.getElementById(`slot-r${i + 1}`));
-    const msg = document.getElementById('slot-result');
-    const coinsEl = document.getElementById('slot-coins');
+    const scoreEl = document.getElementById('slot-score');
     const spinBtn = document.getElementById('slot-spin');
+    const resetBtn = document.getElementById('slot-reset');
+    const resultEl = document.getElementById('slot-result');
+    const modeBtns = document.querySelectorAll('.slot-mode');
+    if (!reelsRoot || !spinBtn || !scoreEl) return;
 
-    let coins = START_COINS;
+    const TARGET = 1000;
+    const MODES = {
+      easy: { reels: 3, name: '简单', matchAll: 200, matchSome: 20, none: 5 },
+      normal: { reels: 4, name: '普通', matchAll: 400, matchSome: 25, none: 5 },
+      hard: { reels: 5, name: '困难', matchAll: 600, matchSome: 30, none: 5 },
+    };
+
+    const rand = (arr) => arr[Math.floor(Math.random() * arr.length)];
+    const symbolSrc = (s) => `${base}/assets/images/emotes/${s.file}`;
+    const sleep = (ms) => new Promise(r => setTimeout(r, ms));
+
+    let mode = 'easy';
+    let score = 0;
     let isSpinning = false;
+    let won = false;
+    let reels = [];
 
-    function symbolSrc(s) { return `${base}/assets/images/emotes/${s.file}`; }
-
-    reels.forEach(el => { el.src = symbolSrc(randSymbol()); });
-    coinsEl.textContent = coins;
-    spinBtn.textContent = `旋转 (${COST})`;
-
-    async function spin() {
-      if (isSpinning) return;
-      if (coins < COST) { msg.textContent = '余额不足，刷新重置'; return; }
-      coins -= COST;
-      coinsEl.textContent = coins;
-      isSpinning = true;
-      spinBtn.disabled = true;
-      msg.textContent = '转动中…';
-
-      const results = await Promise.all(reels.map((el, i) => spinReel(el, 12 + i * 4)));
-      endSpin(results);
+    function buildReels() {
+      const count = MODES[mode].reels;
+      reelsRoot.innerHTML = Array.from({ length: count }, (_, i) =>
+        `<div class="slot-reel"><img id="slot-r${i}" src="${symbolSrc(rand(all))}" alt="reel"></div>`
+      ).join('');
+      reels = Array.from({ length: count }, (_, i) => document.getElementById(`slot-r${i}`));
     }
 
-    function endSpin(results) {
-      if (results.every(s => s.file === results[0].file)) {
-        const symbol = results[0];
-        const payout = payouts[symbol.file] || 10;
-        coins += payout;
-        coinsEl.textContent = coins;
-        msg.textContent = `🎉 三个相同！赢得 ${payout} 币（${symbol.name}）`;
-      } else {
-        msg.textContent = '没有连线，再试一次！';
-      }
-      isSpinning = false;
+    function setMode(name) {
+      if (isSpinning) return;
+      mode = name;
+      modeBtns.forEach(btn => btn.classList.toggle('active', btn.getAttribute('data-mode') === name));
+      resetGame();
+    }
+
+    function resetGame() {
+      score = 0;
+      won = false;
+      scoreEl.textContent = '0';
+      resultEl.textContent = '';
       spinBtn.disabled = false;
+      spinBtn.textContent = '旋转';
+      buildReels();
+    }
+
+    function calcScore(results) {
+      const counts = {};
+      results.forEach(s => { counts[s.file] = (counts[s.file] || 0) + 1; });
+      const maxCount = Math.max(...Object.values(counts));
+      const cfg = MODES[mode];
+
+      if (maxCount === results.length) return { points: cfg.matchAll, msg: `🎉 ${cfg.name}大奖 +${cfg.matchAll}！` };
+      if (maxCount >= 2) return { points: maxCount * cfg.matchSome, msg: `✨ ${maxCount} 连！+${maxCount * cfg.matchSome}` };
+      return { points: cfg.none, msg: `💨 再来一次 +${cfg.none}` };
     }
 
     async function spinReel(el, ticks) {
       for (let i = 0; i < ticks; i++) {
-        const s = randSymbol();
-        el.src = symbolSrc(s);
-        await sleep(70);
+        el.src = symbolSrc(rand(all));
+        await sleep(65);
       }
-      const final = randSymbol();
+      const final = rand(all);
       el.src = symbolSrc(final);
       return final;
     }
 
-    if (spinBtn) spinBtn.addEventListener('click', spin);
+    async function spin() {
+      if (isSpinning || won) return;
+      isSpinning = true;
+      resultEl.textContent = '';
+      spinBtn.disabled = true;
+
+      const cfg = MODES[mode];
+      const ticks = Array.from({ length: cfg.reels }, (_, i) => 12 + i * 4);
+      const results = [];
+      for (let i = 0; i < cfg.reels; i++) {
+        results.push(await spinReel(reels[i], ticks[i]));
+      }
+
+      const outcome = calcScore(results);
+      score += outcome.points;
+      scoreEl.textContent = score;
+      resultEl.textContent = outcome.msg;
+
+      if (score >= TARGET) {
+        won = true;
+        resultEl.textContent = `🏆 恭喜！达到 ${TARGET} 分，你赢了！`;
+        spinBtn.textContent = '已通关';
+      } else {
+        spinBtn.disabled = false;
+      }
+      isSpinning = false;
+    }
+
+    modeBtns.forEach(btn => {
+      btn.addEventListener('click', () => setMode(btn.getAttribute('data-mode')));
+    });
+    spinBtn.addEventListener('click', spin);
+    resetBtn.addEventListener('click', resetGame);
+
+    buildReels();
 
     if (window.__gameHooks) {
       window.__gameHooks.slot = (action) => {
-        if (action === 'open') {
-          coins = START_COINS;
-          coinsEl.textContent = coins;
-          reels.forEach(el => { el.src = symbolSrc(randSymbol()); });
-          msg.textContent = '';
-          isSpinning = false;
-          if (spinBtn) { spinBtn.disabled = false; spinBtn.textContent = `旋转 (${COST})`; }
-        }
+        if (action === 'open') resetGame();
       };
     }
   });
