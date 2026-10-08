@@ -971,7 +971,8 @@ body {
     background: #fff;
 }
 
-#panda-merge {
+#panda-merge,
+#panda-merge-canvas {
     display: block;
     border-radius: 12px;
     background: #f0f7ff;

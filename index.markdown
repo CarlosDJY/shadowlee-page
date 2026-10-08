@@ -178,11 +178,9 @@ description: 点击按钮播放语音 / 浏览表情
     <div class="games-container">
       <h2 class="game-title">合成熊猫</h2>
       <div class="merge-game">
-        <div class="merge-next">下一个：<img id="merge-next-img" src="" alt="next"></div>
-        <canvas id="panda-merge" width="480" height="640"></canvas>
+        <canvas id="panda-merge-canvas" width="400" height="600"></canvas>
         <div class="merge-controls">
           <button id="merge-start" class="control-btn big">开始 / 重开</button>
-          <div class="merge-score">得分：<span id="merge-score">0</span></div>
         </div>
         <p class="merge-tip">移动鼠标选择位置，点击或触摸掉落；两个相同表情的球碰到一起会合成更大的球。</p>
       </div>
@@ -266,3 +264,4 @@ description: 点击按钮播放语音 / 浏览表情
 </script>
 <script src="{{ '/assets/js/player.js' | relative_url }}" defer></script>
 <script src="{{ '/assets/js/games.js' | relative_url }}" defer></script>
+<script src="{{ '/assets/js/panda-merge.js' | relative_url }}" defer></script>
