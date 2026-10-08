@@ -578,3 +578,6 @@ items:
   - file: "香.png"
     name: "香"
     categories: []
+  - file: "批量接口测试_tmp.png"
+    name: "批量接口测试_tmp"
+    categories: []
