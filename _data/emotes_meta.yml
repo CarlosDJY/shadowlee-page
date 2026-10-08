@@ -2,45 +2,42 @@ items:
   - file: "cute_白色奶龙.jpeg"
     name: "白色奶龙"
     categories:
-      - "cute"
+      - "奶龙"
   - file: "GIF_看管人只会害了你_不要看管人啦.gif"
     name: "看管人只会害了你_不要看管人啦"
     categories:
-      - "GIF"
       - "gif"
   - file: "other_嚼大果.gif"
     name: "嚼大果"
     categories:
-      - "other"
       - "gif"
   - file: "other_转圈圈.gif"
     name: "转圈圈"
     categories:
-      - "other"
       - "gif"
   - file: "other_鼓脸.gif"
     name: "鼓脸"
     categories:
-      - "other"
       - "gif"
   - file: "可爱小李_李泡泡冲撞.gif"
     name: "李泡泡冲撞"
     categories:
-      - "可爱小李"
       - "gif"
+      - "可爱小李"
   - file: "黑条遮眼.jpeg"
     name: "黑条遮眼"
-    categories: []
+    categories:
+      - "熊猫"
   - file: "啵啵小熊.gif"
     name: "啵啵小熊"
     categories:
-      - "cute"
       - "gif"
+      - "熊"
   - file: "3D_煤气罐爆炸.gif"
     name: "煤气罐爆炸"
     categories:
-      - "3D"
       - "gif"
+      - "3D"
   - file: "3D_爱上我可是会似的哦.jpg"
     name: "爱上我可是会似的哦"
     categories:
@@ -88,13 +85,13 @@ items:
   - file: "熊猫_急急熊猫头.gif"
     name: "急急熊猫头"
     categories:
-      - "熊猫"
       - "gif"
+      - "熊猫"
   - file: "熊猫_搓搓熊猫.gif"
     name: "搓搓熊猫"
     categories:
-      - "熊猫"
       - "gif"
+      - "熊猫"
   - file: "熊猫_有姛！.jpg"
     name: "有姛！"
     categories:
@@ -135,15 +132,15 @@ items:
     name: "震惊"
     categories:
       - "熊猫"
-      - "cute"
   - file: "kimo猪.jpg"
     name: "kimo猪"
-    categories: []
+    categories:
+      - "kimo"
   - file: "拳击熊猫.gif"
     name: "拳击熊猫"
     categories:
-      - "熊猫"
       - "gif"
+      - "熊猫"
   - file: "惊讶_打歌服_.gif"
     name: "惊讶（打歌服）"
     categories:
@@ -168,6 +165,7 @@ items:
     name: "我可是侄女！"
     categories:
       - "熊猫"
+      - "我是直女"
   - file: "咬Kmx.jpg"
     name: "咬Kmx"
     categories:
@@ -195,11 +193,11 @@ items:
   - file: "百合熊_.jpg"
     name: "百合熊~"
     categories:
-      - "熊猫"
+      - "熊"
   - file: "睡衣小熊.jpg"
     name: "睡衣小熊"
     categories:
-      - "cute"
+      - "熊"
   - file: "举手.jpg"
     name: "举手"
     categories:
@@ -207,11 +205,11 @@ items:
   - file: "熊猫是猫.jpg"
     name: "熊猫是猫"
     categories:
-      - "cute"
+      - "熊猫"
   - file: "魔法熊猫.jpg"
     name: "魔法熊猫"
     categories:
-      - "cute"
+      - "熊猫"
   - file: "熊猫流汗.jpg"
     name: "熊猫流汗"
     categories:
@@ -220,14 +218,15 @@ items:
     name: "顶天立地"
     categories:
       - "熊猫"
+      - "3D"
   - file: "熊猫卖萌.jpg"
     name: "熊猫卖萌"
     categories:
-      - "小大熊猫"
+      - "熊猫"
   - file: "爱心小李.jpg"
     name: "爱心小李"
     categories:
-      - "熊猫"
+      - "可爱小李"
   - file: "摸摸耳朵.jpg"
     name: "摸摸耳朵"
     categories:
