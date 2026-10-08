@@ -234,7 +234,7 @@ items:
   - file: "吃瓜小李.jpg"
     name: "吃瓜小李"
     categories:
-      - "熊猫"
+      - "可爱小李"
   - file: "蛋糕.jpg"
     name: "蛋糕"
     categories:
@@ -242,7 +242,7 @@ items:
   - file: "广西小李.jpg"
     name: "广西小李"
     categories:
-      - "熊猫"
+      - "可爱小李"
   - file: "摸鱼.jpg"
     name: "摸鱼"
     categories:
@@ -251,10 +251,11 @@ items:
     name: "帅李"
     categories:
       - "熊猫"
+      - "可爱小李"
   - file: "kira李_.jpg"
     name: "kira李~"
     categories:
-      - "熊猫"
+      - "可爱小李"
   - file: "被指到的是_.jpg"
     name: "被指到的是？"
     categories:
@@ -266,11 +267,12 @@ items:
   - file: "脸红李.jpg"
     name: "脸红李"
     categories:
+      - "可爱小李"
       - "熊猫"
   - file: "奶熊.jpg"
     name: "奶熊"
     categories:
-      - "熊猫"
+      - "熊"
   - file: "wink_.jpg"
     name: "wink~"
     categories:
@@ -278,145 +280,178 @@ items:
   - file: "你们姛.jpg"
     name: "你们姛"
     categories:
-      - "熊猫"
+      - "other"
   - file: "禁止_.jpg"
     name: "禁止！"
     categories:
-      - "熊猫"
+      - "other"
   - file: "委屈李.jpg"
     name: "委屈李"
     categories:
+      - "可爱小李"
       - "熊猫"
   - file: "点赞李.jpg"
     name: "点赞李"
     categories:
+      - "可爱小李"
       - "熊猫"
   - file: "可爱李.jpg"
     name: "可爱李"
     categories:
-      - "稿件"
+      - "cute"
   - file: "变身偶像李.gif"
     name: "变身偶像李"
     categories:
-      - "可爱"
       - "gif"
   - file: "只是旋转.gif"
     name: "只是旋转"
     categories:
-      - "可爱"
       - "gif"
   - file: "小豆无语.gif"
     name: "小豆无语"
     categories:
-      - "熊猫"
       - "gif"
+      - "小豆"
   - file: "0267b3761cd132ce54e075e6f06b696a.png"
     name: "熊猫_墨镜睡觉"
-    categories: []
+    categories:
+      - "熊猫"
   - file: "02daf3ab921e807633617ac57c6781f7_0.png"
     name: "？"
     categories:
       - "熊猫"
   - file: "0848bb45311414352455fda00dc79535.png"
     name: "熊猫_别走好吗"
-    categories: []
+    categories:
+      - "熊猫"
   - file: "08bdfd3305fe8dadf8e1d1cd60440382_0.png"
     name: "被指到的是~（2）"
     categories:
       - "熊猫"
   - file: "0bea4156d69e06882797d7838e9d16e1.png"
     name: "熊猫_微笑回眸"
-    categories: []
+    categories:
+      - "熊猫"
   - file: "0f89280fcd855c281bd0208003a2959d.jpg"
     name: "熊猫_晕"
-    categories: []
+    categories:
+      - "熊猫"
   - file: "11d21791dfe1a187282eb855f902ba1a.jpg"
     name: "熊猫_侄女"
-    categories: []
+    categories:
+      - "熊猫"
   - file: "12aac7e8390bc3937bbe625914e5f64e.jpg"
     name: "熊猫_Wink举牌"
-    categories: []
+    categories:
+      - "熊猫"
   - file: "14c65c469b227da54f29d3d0174901f5.jpg"
     name: "熊猫_墨镜大笑"
-    categories: []
+    categories:
+      - "熊猫"
   - file: "175866f892481a5b9c5ecd86a29c7912.jpg"
     name: "熊猫_小巫师"
-    categories: []
+    categories:
+      - "熊猫"
   - file: "19669eedad69bf61a01f5745539b3352.png"
     name: "熊猫_贡丸"
-    categories: []
+    categories:
+      - "熊猫"
   - file: "1b02984b1432ff9d14d0c87a7602867f.png"
     name: "熊猫_戴耳机"
-    categories: []
+    categories:
+      - "熊猫"
   - file: "1e96f1308157e685d612b33e5c1bebae.jpg"
     name: "熊猫_抱熊猫害羞"
-    categories: []
+    categories:
+      - "熊猫"
   - file: "209970737047e054adaa606ee4ddb7c2.png"
     name: "熊猫_得意"
-    categories: []
+    categories:
+      - "熊猫"
   - file: "2df28eb6ec37457fce1002498172c752.jpg"
     name: "熊猫_404"
-    categories: []
+    categories:
+      - "熊猫"
   - file: "33f7467a6098ea62f98fa01f2fa98f26.png"
     name: "熊猫_问号拿花"
-    categories: []
+    categories:
+      - "熊猫"
   - file: "36e8526c9cf5f811360c87a229f4e874.jpg"
     name: "熊猫_两眼一黑"
-    categories: []
+    categories:
+      - "熊猫"
   - file: "3abc5dc3969149706062d72481b07f03.jpg"
     name: "熊猫_抱爱心"
-    categories: []
+    categories:
+      - "熊猫"
   - file: "3cf3c2f7becaf1df17b6ef51d718e7b9.jpg"
     name: "熊猫_打哈欠"
-    categories: []
+    categories:
+      - "熊猫"
   - file: "4b9ad0a9b3b7ccb1a6a033b24414b904.png"
     name: "熊猫_放大镜"
-    categories: []
+    categories:
+      - "熊猫"
   - file: "4faa9578553946e468297b2e1e54b7bb.jpg"
     name: "熊猫_线条躺平"
-    categories: []
+    categories:
+      - "熊猫"
   - file: "5471eb6d1d5611a2c866c3d2d185b02c_0.jpg"
     name: "5471eb6d1d5611a2c866c3d2d185b02c_0"
-    categories: []
+    categories:
+      - "3D"
   - file: "5b30d7a9b3bff7b3ceac783a0f7137c8.png"
     name: "熊猫_坏笑"
-    categories: []
+    categories:
+      - "熊猫"
   - file: "5c1c5542eea656972d03d81652e8aa1a_720.png"
     name: "熊猫_人森李"
-    categories: []
+    categories:
+      - "熊猫"
   - file: "5e5daaa8ed2b967bca27c0500a8fe29f.png"
     name: "熊猫_大头"
-    categories: []
+    categories:
+      - "熊猫"
   - file: "69405dab1e65ee686cd480cb56b04a18.png"
     name: "熊猫_吐舌"
-    categories: []
+    categories:
+      - "熊猫"
   - file: "6f36724749cc7cc43d5c5eea5c587e35.jpg"
     name: "熊猫_严肃"
-    categories: []
+    categories:
+      - "熊猫"
   - file: "70f9cc66d0b618852551e64f13e52ac1_0.png"
     name: "熊猫_被指到的是~（3）"
-    categories: []
+    categories:
+      - "熊猫"
   - file: "7ab1e6b46644a7d83cf3b9d5052d65db.png"
     name: "熊猫_撕开"
-    categories: []
+    categories:
+      - "熊猫"
   - file: "81b6026f770af84303e8666ceb2dfe16.png"
     name: "熊猫_抱爱心闭眼"
-    categories: []
+    categories:
+      - "熊猫"
   - file: "87c53d644f6faa3334bd1cf314a2b7aa.jpg"
     name: "熊猫_墨镜人偶"
-    categories: []
+    categories:
+      - "熊猫"
   - file: "88f82812eceee73a46f4a7b89b79c3ea.jpg"
     name: "熊猫_侧脸"
-    categories: []
+    categories:
+      - "熊猫"
   - file: "897a6faa2d5f2f2d1b78191e9decd3d9.jpg"
     name: "熊猫_委屈"
-    categories: []
+    categories:
+      - "熊猫"
   - file: "93b721e284b4f1448386302a953b138b.jpg"
     name: "熊猫_嘟嘴"
-    categories: []
+    categories:
+      - "熊猫"
   - file: "9706807ee8fc588e02a5dcc99c424696_720.jpg"
     name: "9706807ee8fc588e02a5dcc99c424696_720"
-    categories: []
+    categories:
+      - "熊猫"
   - file: "9f6af103e7fe69bfe60fbd077d8f0175.jpg"
     name: "熊猫_微笑"
     categories: []
