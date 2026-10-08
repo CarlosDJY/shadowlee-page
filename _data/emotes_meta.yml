@@ -312,8 +312,9 @@ items:
       - "熊猫"
       - "gif"
   - file: "0267b3761cd132ce54e075e6f06b696a.png"
-    name: "0267b3761cd132ce54e075e6f06b696a"
-    categories: []
+    name: "熊猫昏睡"
+    categories:
+      - "熊猫"
   - file: "02daf3ab921e807633617ac57c6781f7_0.png"
     name: "02daf3ab921e807633617ac57c6781f7_0"
     categories: []
