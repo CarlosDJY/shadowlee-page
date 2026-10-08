@@ -144,48 +144,73 @@ description: 点击按钮播放语音 / 浏览表情
 
   <!-- 游戏面板 -->
   <section id="games-panel" class="tab-panel">
-    <div class="games-container">
-      <h2 class="game-title">熊猫老虎机</h2>
-      <div class="slot-machine">
-        <div class="slot-reels" id="slot-reels">
-          <div class="slot-reel"><img src="" alt="?" id="reel-0"></div>
-          <div class="slot-reel"><img src="" alt="?" id="reel-1"></div>
-          <div class="slot-reel"><img src="" alt="?" id="reel-2"></div>
-        </div>
-        <div class="slot-controls">
-          <div class="slot-info">余额：<span id="slot-balance">1000</span>　押注：<span id="slot-current-bet">50</span></div>
-          <div class="slot-bet-buttons">
-            <button class="bet-btn" data-bet="10">10</button>
-            <button class="bet-btn active" data-bet="50">50</button>
-            <button class="bet-btn" data-bet="100">100</button>
-          </div>
-          <button id="slot-spin" class="control-btn big">开始</button>
-          <div id="slot-result" class="slot-result"></div>
-        </div>
+    <div class="games-grid">
+      <div class="game-card" data-game="slot" tabindex="0" role="button" aria-label="打开熊猫老虎机">
+        <div class="game-card-icon">🎰</div>
+        <h3>熊猫老虎机</h3>
+        <p>拉动拉杆，三个相同表情赢大奖</p>
       </div>
-    </div>
-
-    <div class="games-container">
-      <h2 class="game-title">熊猫三维弹球</h2>
-      <canvas id="panda-pinball" width="480" height="640"></canvas>
-      <div class="pinball-controls">
-        <button id="pinball-start" class="control-btn big">开始</button>
-        <div class="pinball-score">得分：<span id="pinball-score">0</span></div>
+      <div class="game-card" data-game="pinball" tabindex="0" role="button" aria-label="打开熊猫弹球">
+        <div class="game-card-icon">🎱</div>
+        <h3>熊猫弹球</h3>
+        <p>弹球碰撞，挑战最高分</p>
       </div>
-      <p class="pinball-tip">移动鼠标或触摸控制挡板，让熊猫球在三维桌面上弹跳得分。</p>
-    </div>
-
-    <div class="games-container">
-      <h2 class="game-title">合成熊猫</h2>
-      <div class="merge-game">
-        <canvas id="panda-merge-canvas" width="400" height="600"></canvas>
-        <div class="merge-controls">
-          <button id="merge-start" class="control-btn big">开始 / 重开</button>
-        </div>
-        <p class="merge-tip">移动鼠标选择位置，点击或触摸掉落；两个相同表情的球碰到一起会合成更大的球。</p>
+      <div class="game-card" data-game="merge" tabindex="0" role="button" aria-label="打开合成熊猫">
+        <div class="game-card-icon">🐼</div>
+        <h3>合成熊猫</h3>
+        <p>相同表情合成更大的球</p>
+      </div>
+      <div class="game-card" data-game="flappy" tabindex="0" role="button" aria-label="打开李豆沙 Flappy">
+        <div class="game-card-icon">🪽</div>
+        <h3>李豆沙 Flappy</h3>
+        <p>扇动翅膀穿过管道</p>
       </div>
     </div>
   </section>
+
+  <!-- 游戏弹窗 -->
+  <div id="game-modal" class="game-modal" style="display:none;" aria-hidden="true">
+    <div class="game-modal-backdrop" data-close-modal></div>
+    <div class="game-modal-content">
+      <button class="game-modal-close" data-close-modal aria-label="关闭">&times;</button>
+      <div class="game-modal-body" id="game-modal-body">
+        <div class="game-instance" id="game-slot" data-game="slot">
+          <h2 class="game-title">熊猫老虎机</h2>
+          <div class="slot-machine">
+            <div class="slot-reels" id="slot-reels"></div>
+            <div class="slot-controls">
+              <div class="slot-info">余额：<span id="slot-coins">100</span></div>
+              <button id="slot-spin" class="control-btn big">旋转 (5)</button>
+              <div id="slot-result" class="slot-result"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="game-instance" id="game-pinball" data-game="pinball">
+          <h2 class="game-title">熊猫弹球</h2>
+          <canvas id="pinball-canvas" width="420" height="620"></canvas>
+          <div class="pinball-controls">
+            <button id="pinball-start" class="control-btn big">发射</button>
+            <button id="pinball-restart" class="control-btn big">重开</button>
+            <div class="pinball-score">得分：<span id="pinball-score">0</span></div>
+          </div>
+          <p class="pinball-tip">点击发射，用 ← → 键控制挡板，不要让球掉下去。</p>
+        </div>
+
+        <div class="game-instance" id="game-merge" data-game="merge">
+          <h2 class="game-title">合成熊猫</h2>
+          <canvas id="merge-canvas" width="400" height="600"></canvas>
+          <p class="merge-tip">移动鼠标选位置，点击掉落；相同表情球碰撞会合成更大的球。</p>
+        </div>
+
+        <div class="game-instance" id="game-flappy" data-game="flappy">
+          <h2 class="game-title">李豆沙 Flappy</h2>
+          <canvas id="flappy-canvas" width="400" height="600"></canvas>
+          <p class="flappy-tip">点击或按空格键跳跃，避开管道。</p>
+        </div>
+      </div>
+    </div>
+  </div>
 
   <!-- 管理上传面板（默认隐藏，登录后显示） -->
   <section id="admin-panel" class="admin-panel" style="display:none;">
@@ -263,5 +288,8 @@ description: 点击按钮播放语音 / 浏览表情
   window.EMOTE_META = {{ site.data.emotes_meta | jsonify }};
 </script>
 <script src="{{ '/assets/js/player.js' | relative_url }}" defer></script>
-<script src="{{ '/assets/js/games.js' | relative_url }}" defer></script>
-<script src="{{ '/assets/js/panda-merge.js' | relative_url }}" defer></script>
+<script src="{{ '/assets/js/game-modal.js' | relative_url }}" defer></script>
+<script src="{{ '/assets/js/game-slot.js' | relative_url }}" defer></script>
+<script src="{{ '/assets/js/game-pinball.js' | relative_url }}" defer></script>
+<script src="{{ '/assets/js/game-merge.js' | relative_url }}" defer></script>
+<script src="{{ '/assets/js/game-flappy.js' | relative_url }}" defer></script>

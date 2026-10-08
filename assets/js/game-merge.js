@@ -1,11 +1,10 @@
 /**
- * 合成熊猫 - 基于 suikagame (MIT) 改编
+ * 合成熊猫 - 基于开源 suikagame (MIT) 改造
  * 物理掉落 + 相同表情合并
  */
 (function () {
   const base = (window.SITE_BASE || '/').replace(/\/$/, '');
 
-  // 简化的日志（不依赖 DOM）
   const gameLogger = {
     info: (msg) => console.log('[合成熊猫]', msg),
     warning: (msg) => console.warn('[合成熊猫]', msg),
@@ -13,7 +12,7 @@
   };
 
   class PandaMergeGame {
-    constructor(canvasId = 'panda-merge-canvas') {
+    constructor(canvasId = 'merge-canvas') {
       this.canvas = document.getElementById(canvasId);
       if (!this.canvas) {
         gameLogger.error('Canvas not found: ' + canvasId);
@@ -25,7 +24,6 @@
       this.imagesLoaded = false;
 
       const meta = window.EMOTE_META || { items: [] };
-      // 取前 11 个有文件的表情；不足则循环补齐
       const items = [];
       const all = meta.items.filter(i => i.file);
       for (let i = 0; i < 11; i++) {
@@ -90,8 +88,7 @@
         this.emoteImages[index] = img;
       });
 
-      // 建立 emoteType -> image 映射
-      this.emoteTypes.forEach((type, i) => {
+      this.emoteTypes.forEach((type) => {
         type.imageIndex = uniqueFiles.indexOf(type.file);
       });
 
@@ -115,7 +112,7 @@
         this.nextFruit.x = this.nextFruitX;
       });
 
-      this.canvas.addEventListener('click', (e) => {
+      this.canvas.addEventListener('click', () => {
         if (this.gameOver) {
           this.init();
         } else if (!this.isPaused) {
@@ -134,9 +131,6 @@
           this.togglePause();
         }
       });
-
-      const startBtn = document.getElementById('merge-start');
-      if (startBtn) startBtn.addEventListener('click', () => this.init());
     }
 
     init() {
@@ -160,7 +154,6 @@
         radius: this.emoteTypes[fruitIndex].radius,
         color: this.emoteTypes[fruitIndex].color
       };
-      gameLogger.info('下一个表情: ' + this.emoteTypes[fruitIndex].name);
     }
 
     dropFruit() {
@@ -174,7 +167,6 @@
         radius: this.nextFruit.radius,
         color: this.nextFruit.color
       });
-      gameLogger.info('掉落: ' + this.emoteTypes[this.nextFruit.type].name);
       this.createNextFruit();
     }
 
@@ -272,7 +264,6 @@
               fruitA.toRemove = true;
               fruitB.toRemove = true;
 
-              gameLogger.info(`${this.emoteTypes[fruitA.type].name} × 2 合成 ${this.emoteTypes[newType].name}`);
               if (newType === this.emoteTypes.length - 1) {
                 gameLogger.info('恭喜！合成出了最大的表情！');
               }
@@ -359,7 +350,7 @@
         this.ctx.textAlign = 'center';
         this.ctx.fillText('暂停中', this.canvas.width / 2, this.canvas.height / 2 - 30);
         this.ctx.font = '16px sans-serif';
-        this.ctx.fillText('按 P 键或点击画面继续', this.canvas.width / 2, this.canvas.height / 2 + 10);
+        this.ctx.fillText('点击画面继续', this.canvas.width / 2, this.canvas.height / 2 + 10);
       }
 
       if (this.gameOver) {
@@ -406,16 +397,18 @@
         this.drawDefaultFruit(fruit);
       }
 
-      this.ctx.fillStyle = '#FFF';
-      this.ctx.font = `bold ${Math.max(10, fruit.radius / 3)}px sans-serif`;
-      this.ctx.textAlign = 'center';
-      this.ctx.textBaseline = 'middle';
-      this.ctx.strokeStyle = 'rgba(0,0,0,0.6)';
-      this.ctx.lineWidth = 3;
-      const name = this.emoteTypes[fruit.type].name;
-      this.ctx.strokeText(name, fruit.x, fruit.y);
-      this.ctx.fillText(name, fruit.x, fruit.y);
-      this.ctx.textBaseline = 'alphabetic';
+      if (fruit.radius > 18) {
+        this.ctx.fillStyle = '#FFF';
+        this.ctx.font = `bold ${Math.max(10, fruit.radius / 3)}px sans-serif`;
+        this.ctx.textAlign = 'center';
+        this.ctx.textBaseline = 'middle';
+        this.ctx.strokeStyle = 'rgba(0,0,0,0.6)';
+        this.ctx.lineWidth = 3;
+        const name = this.emoteTypes[fruit.type].name;
+        this.ctx.strokeText(name, fruit.x, fruit.y);
+        this.ctx.fillText(name, fruit.x, fruit.y);
+        this.ctx.textBaseline = 'alphabetic';
+      }
     }
 
     drawDefaultFruit(fruit) {
@@ -449,6 +442,11 @@
   }
 
   window.addEventListener('load', () => {
-    new PandaMergeGame();
+    const game = new PandaMergeGame();
+    if (window.__gameHooks) {
+      window.__gameHooks.merge = (action) => {
+        if (action === 'open') game.init();
+      };
+    }
   });
 })();
