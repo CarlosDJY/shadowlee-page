@@ -193,6 +193,23 @@ async function updateMeta(env, { file, name, categories }) {
   return file;
 }
 
+async function updateMetaBatch(env, { items }) {
+  if (!Array.isArray(items) || items.length === 0) throw new Error('空列表');
+  const { data, sha } = await readMeta(env);
+  let changed = 0;
+  for (const it of items) {
+    const item = (data.items || []).find(i => i.file === it.file);
+    if (!item) continue;
+    if (typeof it.name === 'string' && it.name.trim()) item.name = it.name.trim();
+    let cats = Array.isArray(it.categories) ? [...new Set(it.categories)] : [];
+    if (it.file.toLowerCase().endsWith('.gif') && !cats.includes('gif')) cats.push('gif'); // gif 默认保留 gif 分类
+    item.categories = cats;
+    changed++;
+  }
+  if (changed > 0) await writeMeta(env, data, sha);
+  return changed;
+}
+
 async function uploadBatch(env, { items, categories }) {
   const globalCats = Array.isArray(categories) ? [...new Set(categories)] : [];
   const { data, sha } = await readMeta(env);
@@ -300,6 +317,16 @@ export default {
         if (!file) return new Response('Missing file', { status: 400, headers: corsHeaders });
         const updated = await updateMeta(env, { file, name, categories });
         return new Response(JSON.stringify({ ok: true, file: updated }), {
+          status: 200,
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        });
+      } else if (action === 'updateMetaBatch') {
+        const { items } = body;
+        if (!Array.isArray(items) || !items.length) {
+          return new Response('Missing items', { status: 400, headers: corsHeaders });
+        }
+        const updated = await updateMetaBatch(env, { items });
+        return new Response(JSON.stringify({ ok: true, updated }), {
           status: 200,
           headers: { ...corsHeaders, 'Content-Type': 'application/json' },
         });
