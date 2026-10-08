@@ -174,6 +174,19 @@ description: 点击按钮播放语音 / 浏览表情
       </div>
       <p class="pinball-tip">移动鼠标或触摸控制挡板，让熊猫球在三维桌面上弹跳得分。</p>
     </div>
+
+    <div class="games-container">
+      <h2 class="game-title">合成熊猫</h2>
+      <div class="merge-game">
+        <div class="merge-next">下一个：<img id="merge-next-img" src="" alt="next"></div>
+        <canvas id="panda-merge" width="480" height="640"></canvas>
+        <div class="merge-controls">
+          <button id="merge-start" class="control-btn big">开始 / 重开</button>
+          <div class="merge-score">得分：<span id="merge-score">0</span></div>
+        </div>
+        <p class="merge-tip">移动鼠标选择位置，点击或触摸掉落；两个相同表情的球碰到一起会合成更大的球。</p>
+      </div>
+    </div>
   </section>
 
   <!-- 管理上传面板（默认隐藏，登录后显示） -->
