@@ -328,8 +328,9 @@ items:
     categories:
       - "熊猫"
   - file: "0bea4156d69e06882797d7838e9d16e1.png"
-    name: "0bea4156d69e06882797d7838e9d16e1"
-    categories: []
+    name: "展示环节~"
+    categories:
+      - "熊猫"
   - file: "0f89280fcd855c281bd0208003a2959d.jpg"
     name: "0f89280fcd855c281bd0208003a2959d"
     categories: []
