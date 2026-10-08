@@ -454,158 +454,210 @@ items:
       - "熊猫"
   - file: "9f6af103e7fe69bfe60fbd077d8f0175.jpg"
     name: "熊猫_微笑"
-    categories: []
+    categories:
+      - "熊猫"
   - file: "9ff1722630df0b1b9258aba327b715db.jpg"
     name: "熊猫_双马尾眨眼"
-    categories: []
+    categories:
+      - "熊猫"
   - file: "a1771861f6984bc81a55c2485dbc87c1.jpg"
     name: "熊猫_墨镜问号"
-    categories: []
+    categories:
+      - "熊猫"
   - file: "a530af37a1e3e7c069394dd9467b821b.png"
     name: "熊猫_比耶大笑"
-    categories: []
+    categories:
+      - "熊猫"
   - file: "ac1c04fbbfb61801bb3effb15fcd620f_0.jpg"
     name: "熊猫_绿通李"
-    categories: []
+    categories:
+      - "熊猫"
   - file: "b64f9bb57f0b9db8edfc4edb83aa46e3.png"
     name: "熊猫_惊讶"
-    categories: []
+    categories:
+      - "熊猫"
   - file: "b73fa894dcbad070fa4c1bc6ff3a2311.jpg"
     name: "熊猫_舞台笑"
-    categories: []
+    categories:
+      - "熊猫"
   - file: "b78c9186d1349a0d1fb3439c38a00b5d.png"
     name: "熊猫_吐舌鬼脸"
-    categories: []
+    categories:
+      - "熊猫"
   - file: "b812bde2d68daa2c1175b8d3b6ecf30a.jpg"
     name: "熊猫_没等到"
-    categories: []
+    categories:
+      - "熊猫"
   - file: "bc047720c929b20b68617d4070363261.png"
     name: "熊猫_疑问"
-    categories: []
+    categories:
+      - "熊猫"
   - file: "c2341fbd1cb3eb08af334800fd938cf2.png"
     name: "熊猫_抱抱"
-    categories: []
+    categories:
+      - "熊猫"
   - file: "c31795851d74f92751f4c4ae3e6d2e43.png"
     name: "熊猫_墨镜惊讶"
-    categories: []
+    categories:
+      - "熊猫"
   - file: "caa8615d63ea8d8b10361ab7f934b40f.gif"
     name: "熊猫_舞台眨眼"
     categories:
       - "gif"
+      - "熊猫"
   - file: "cb30da74739825d4222d261bba2e9042.png"
     name: "熊猫_流泪墨镜"
-    categories: []
+    categories:
+      - "熊猫"
   - file: "d3a87fcfec7b664b3dd8b268e535aa11.png"
     name: "熊猫_加载中"
-    categories: []
+    categories:
+      - "熊猫"
   - file: "e1261a7d5a98cfeb3dbf34f3193816a8.png"
     name: "熊猫_问号笑"
-    categories: []
+    categories:
+      - "熊猫"
   - file: "e3f8a2dbbb0b2c4c79d0ec1ce047ec7e.png"
     name: "熊猫_打call"
-    categories: []
+    categories:
+      - "熊猫"
   - file: "e60a017bda40ba182552e65c14f68940.png"
     name: "熊猫_特写微笑"
-    categories: []
+    categories:
+      - "熊猫"
   - file: "eb504421ea1e8dc79eae14e363fe7573.png"
     name: "熊猫_脸红"
-    categories: []
+    categories:
+      - "熊猫"
   - file: "f195bb39109f99187c07c616a018b6b8.jpg"
     name: "熊猫_眼罩"
-    categories: []
+    categories:
+      - "熊猫"
   - file: "fe86e6ac11d180f8d8abb9bd0136b631.jpg"
     name: "熊猫_不也挺好吗"
-    categories: []
+    categories:
+      - "熊猫"
   - file: "wink.png"
     name: "wink"
-    categories: []
+    categories:
+      - "熊猫"
   - file: "不可估量.png"
     name: "不可估量"
-    categories: []
+    categories:
+      - "熊猫"
   - file: "不行.png"
     name: "不行"
-    categories: []
+    categories:
+      - "熊猫"
   - file: "你们姛.png"
     name: "你们姛"
-    categories: []
+    categories:
+      - "熊猫"
   - file: "写不完了 (2).png"
     name: "写不完了 (2)"
-    categories: []
+    categories:
+      - "other"
   - file: "写不完了.png"
     name: "写不完了"
-    categories: []
+    categories:
+      - "other"
   - file: "卡密.png"
     name: "卡密"
-    categories: []
+    categories:
+      - "熊猫"
   - file: "发脾气.png"
     name: "发脾气"
-    categories: []
+    categories:
+      - "熊猫"
   - file: "只想自己.png"
     name: "只想自己"
-    categories: []
+    categories:
+      - "熊猫"
   - file: "可爱捏.png"
     name: "可爱捏"
-    categories: []
+    categories:
+      - "cute"
   - file: "咬牙切齿.png"
     name: "咬牙切齿"
-    categories: []
+    categories:
+      - "熊猫"
   - file: "嚣张.jpg"
     name: "嚣张"
-    categories: []
+    categories:
+      - "熊猫"
   - file: "地铁老人.png"
     name: "地铁老人"
-    categories: []
+    categories:
+      - "熊猫"
   - file: "大小眼.jpg"
     name: "大小眼"
-    categories: []
+    categories:
+      - "熊猫"
   - file: "好.png"
     name: "好"
-    categories: []
+    categories:
+      - "熊猫"
   - file: "帅.png"
     name: "帅"
-    categories: []
+    categories:
+      - "other"
   - file: "思考.png"
     name: "思考"
-    categories: []
+    categories:
+      - "熊猫"
   - file: "打call.png"
     name: "打call"
-    categories: []
+    categories:
+      - "熊猫"
   - file: "挂机.png"
     name: "挂机"
-    categories: []
+    categories:
+      - "熊猫"
   - file: "晚安.png"
     name: "晚安"
-    categories: []
+    categories:
+      - "other"
   - file: "比耶.jpg"
     name: "比耶"
-    categories: []
+    categories:
+      - "熊猫"
   - file: "炒菜.png"
     name: "炒菜"
-    categories: []
+    categories:
+      - "熊猫"
   - file: "烦.jpg"
     name: "烦"
-    categories: []
+    categories:
+      - "熊猫"
   - file: "略略略.jpg"
     name: "略略略"
-    categories: []
+    categories:
+      - "熊猫"
   - file: "盯.jpg"
     name: "盯"
-    categories: []
+    categories:
+      - "熊猫"
   - file: "神金.png"
     name: "神金"
-    categories: []
+    categories:
+      - "other"
   - file: "笑死.png"
     name: "笑死"
-    categories: []
+    categories:
+      - "other"
   - file: "讨厌你.png"
     name: "讨厌你"
-    categories: []
+    categories:
+      - "熊猫"
   - file: "谢谢你.png"
     name: "谢谢你"
-    categories: []
+    categories:
+      - "熊猫"
   - file: "转移话题.jpg"
     name: "转移话题"
-    categories: []
+    categories:
+      - "熊猫"
   - file: "香.png"
     name: "香"
-    categories: []
+    categories:
+      - "熊猫"
