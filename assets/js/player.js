@@ -361,29 +361,78 @@ document.addEventListener('DOMContentLoaded', () => {
         (meta.items || []).forEach(item => {
             const row = document.createElement('div');
             row.className = 'cat-row';
+            row._file = item.file;
+            row._origName = item.name;
+            row._origCats = (item.categories || []).join(',');
             const imgSrc = `${base}/assets/images/emotes/${encodeURIComponent(item.file)}`;
             row.innerHTML = `
                 <img class="manage-thumb" src="${imgSrc}" alt="${item.name}" loading="lazy">
-                <input type="text" class="manage-name-input" value="${item.name}" placeholder="名字" data-file="${item.file}">
-                <input type="text" class="manage-cat-input" value="${(item.categories || []).join(',')}" placeholder="分类，逗号分隔" data-file="${item.file}">
-                <button class="cat-save control-btn small">保存</button>
+                <input type="text" class="manage-name-input" value="${item.name}" placeholder="名字">
+                <input type="text" class="manage-cat-input" value="${(item.categories || []).join(',')}" placeholder="分类，逗号分隔">
             `;
-            row.querySelector('.cat-save').addEventListener('click', async (e) => {
-                const row = e.target.closest('.cat-row');
-                const nameInput = row.querySelector('.manage-name-input');
-                const catInput = row.querySelector('.manage-cat-input');
-                const name = nameInput.value.trim();
-                const cats = catInput.value.split(',').map(s => s.trim()).filter(Boolean);
-                if (!name) { alert('名字不能为空'); return; }
-                try {
-                    await updateEmoteMeta(item.file, name, cats);
-                    alert('已保存，等待 Pages 自动部署后生效');
-                } catch (err) {
-                    alert('保存失败：' + err.message);
-                }
-            });
             listEl.appendChild(row);
         });
+
+        // 批量保存按钮（只提交有改动的条目）
+        const oldBtn = document.getElementById('manage-save-all');
+        if (oldBtn) oldBtn.remove();
+        const saveAllBtn = document.createElement('button');
+        saveAllBtn.id = 'manage-save-all';
+        saveAllBtn.className = 'control-btn';
+        saveAllBtn.textContent = '批量保存修改';
+        saveAllBtn.style.marginTop = '14px';
+        saveAllBtn.addEventListener('click', saveAllChanges);
+        listEl.insertAdjacentElement('afterend', saveAllBtn);
+    }
+
+    async function updateEmoteMetaBatch(items) {
+        const workerUrl = window.UPLOAD_WORKER_URL;
+        if (!workerUrl) throw new Error('未配置上传 Worker');
+        const password = sessionStorage.getItem('shadowleeAdminPwd');
+        if (!password) throw new Error('请先登录');
+        const res = await fetch(workerUrl, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'x-upload-password': password },
+            body: JSON.stringify({ action: 'updateMetaBatch', items }),
+        });
+        const text = await res.text();
+        if (!res.ok) throw new Error(text);
+        const local = window.EMOTE_META.items || [];
+        items.forEach(it => {
+            const m = local.find(i => i.file === it.file);
+            if (m) { m.name = it.name; m.categories = it.categories; }
+        });
+    }
+
+    async function saveAllChanges() {
+        const listEl = document.getElementById('manage-cat-list');
+        if (!listEl) return;
+        const rows = listEl.querySelectorAll('.cat-row');
+        const items = [];
+        rows.forEach(row => {
+            const nameInput = row.querySelector('.manage-name-input');
+            const catInput = row.querySelector('.manage-cat-input');
+            const name = nameInput.value.trim();
+            if (!name) return;
+            const cats = catInput.value.split(',').map(s => s.trim()).filter(Boolean);
+            const origCats = (row._origCats || '').split(',').map(s => s.trim()).filter(Boolean);
+            const changed = name !== (row._origName || '') || cats.join(',') !== origCats.join(',');
+            if (changed) items.push({ file: row._file, name, categories: cats });
+        });
+        if (items.length === 0) { alert('没有改动需要保存'); return; }
+        if (!confirm(`确认批量保存 ${items.length} 处修改？`)) return;
+        try {
+            await updateEmoteMetaBatch(items);
+            alert(`已批量保存 ${items.length} 项，等待 Pages 自动部署后生效`);
+            rows.forEach(row => {
+                const nameInput = row.querySelector('.manage-name-input');
+                const catInput = row.querySelector('.manage-cat-input');
+                row._origName = nameInput.value.trim();
+                row._origCats = catInput.value.split(',').map(s => s.trim()).filter(Boolean).join(',');
+            });
+        } catch (err) {
+            alert('保存失败：' + err.message);
+        }
     }
 
     renderManageCategories();
@@ -509,25 +558,62 @@ document.addEventListener('DOMContentLoaded', () => {
         return { ok: true, worker: true, ...JSON.parse(text) };
     }
 
-    // 上传表情
+    async function uploadBatch(items, categories) {
+        const workerUrl = window.UPLOAD_WORKER_URL;
+        if (!workerUrl) {
+            // 无 Worker 时回退本地存储
+            for (const it of items) {
+                const mime = it.ext === 'jpg' ? 'image/jpeg' : `image/${it.ext}`;
+                await saveLocalFile({
+                    id: `emote_${Date.now()}_${Math.random().toString(36).slice(2)}`,
+                    type: 'emote',
+                    category: categories[0] || 'other',
+                    categories,
+                    name: it.name,
+                    dataUrl: `data:${mime};base64,${it.content}`,
+                    timestamp: Date.now(),
+                });
+            }
+            return { ok: true, local: true, files: items.map(i => i.name) };
+        }
+        const password = sessionStorage.getItem('shadowleeAdminPwd');
+        if (!password) {
+            alert('请先重新登录获取上传授权');
+            return null;
+        }
+        const res = await fetch(workerUrl, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'x-upload-password': password },
+            body: JSON.stringify({ action: 'uploadBatch', type: 'emote', items, categories }),
+        });
+        const text = await res.text();
+        if (!res.ok) throw new Error(text || `HTTP ${res.status}`);
+        return { ok: true, ...JSON.parse(text) };
+    }
+
+    // 上传表情（支持多文件批量）
     document.getElementById('upload-emote-btn')?.addEventListener('click', async () => {
         const categoryInput = document.getElementById('upload-emote-category');
-        const nameInput = document.getElementById('upload-emote-name');
         const fileInput = document.getElementById('upload-emote-file');
-        const file = fileInput.files[0];
-        if (!file) { alert('请选择图片'); return; }
-        if (!nameInput.value.trim()) { alert('请填写表情名称'); return; }
+        const files = Array.from(fileInput.files || []);
+        if (files.length === 0) { alert('请选择图片'); return; }
 
         try {
-            const result = await uploadFile('emote', file, categoryInput.value, nameInput.value);
-            if (!result.ok) return;
+            const items = [];
+            for (const file of files) {
+                const ext = (file.name.split('.').pop() || 'png').toLowerCase();
+                const dataUrl = await readFileAsDataURL(file);
+                const content = dataUrl.split(',')[1];
+                const name = file.name.replace(/\.[^.]+$/, '');
+                items.push({ name, ext, content });
+            }
+            const categories = (categoryInput.value || '').split(',').map(s => s.trim()).filter(Boolean);
+            const result = await uploadBatch(items, categories);
+            if (!result || !result.ok) return;
             categoryInput.value = '';
-            nameInput.value = '';
             fileInput.value = '';
             await renderLocalFiles();
-            alert(result.local
-                ? '已保存到本地浏览器（未配置 Worker）'
-                : '已上传到 GitHub 仓库，请等待 Pages 自动部署（约 30 秒 ~ 2 分钟）');
+            alert(`已上传 ${result.files.length} 张到 GitHub 仓库，请等待 Pages 自动部署（约 30 秒 ~ 2 分钟）`);
         } catch (e) {
             alert('上传失败：' + e.message);
         }

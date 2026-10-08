@@ -193,6 +193,40 @@ async function updateMeta(env, { file, name, categories }) {
   return file;
 }
 
+async function uploadBatch(env, { items, categories }) {
+  const globalCats = Array.isArray(categories) ? [...new Set(categories)] : [];
+  const { data, sha } = await readMeta(env);
+  data.items = data.items || [];
+  const uploaded = [];
+  let idx = 0;
+  for (const it of items) {
+    const base = safeName(it.name || 'emote');
+    let fileName = `${base}.${it.ext}`;
+    const checkUrl = `https://api.github.com/repos/${env.GITHUB_REPO}/contents/${EMOTE_DIR}/${encodeURIComponent(fileName)}`;
+    const chk = await fetch(checkUrl, { headers: await ghHeaders(env) });
+    if (chk.status === 200) {
+      fileName = `${base}_${Date.now()}_${idx}.${it.ext}`;
+    }
+    const putUrl = `https://api.github.com/repos/${env.GITHUB_REPO}/contents/${EMOTE_DIR}/${encodeURIComponent(fileName)}`;
+    const putRes = await fetch(putUrl, {
+      method: 'PUT',
+      headers: await ghHeaders(env, { 'Content-Type': 'application/json' }),
+      body: JSON.stringify({ message: `Upload ${fileName}`, content: it.content }),
+    });
+    if (!putRes.ok) {
+      const t = await putRes.text();
+      throw new Error(`上传图片失败: ${putRes.status} ${t}`);
+    }
+    let cats = [...globalCats];
+    if (it.ext === 'gif' && !cats.includes('gif')) cats.push('gif'); // gif 默认归入 gif 分类
+    data.items.push({ file: fileName, name: it.name || base, categories: cats });
+    uploaded.push(fileName);
+    idx++;
+  }
+  await writeMeta(env, data, sha);
+  return uploaded;
+}
+
 export default {
   async fetch(request, env) {
     const corsHeaders = {
@@ -266,6 +300,16 @@ export default {
         if (!file) return new Response('Missing file', { status: 400, headers: corsHeaders });
         const updated = await updateMeta(env, { file, name, categories });
         return new Response(JSON.stringify({ ok: true, file: updated }), {
+          status: 200,
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        });
+      } else if (action === 'uploadBatch') {
+        const { items, categories } = body;
+        if (!Array.isArray(items) || !items.length) {
+          return new Response('Missing items', { status: 400, headers: corsHeaders });
+        }
+        const uploaded = await uploadBatch(env, { items, categories: categories || [] });
+        return new Response(JSON.stringify({ ok: true, files: uploaded }), {
           status: 200,
           headers: { ...corsHeaders, 'Content-Type': 'application/json' },
         });

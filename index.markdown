@@ -155,13 +155,11 @@ description: 点击按钮播放语音 / 浏览表情
     </div>
 
     <div class="upload-form active" id="upload-emote-form">
-      <label>分类前缀（会用于筛选，如 cute）：</label>
+      <label>分类前缀（用于筛选，多分类用逗号分隔）：</label>
       <input type="text" id="upload-emote-category" placeholder="cute">
-      <label>表情名称：</label>
-      <input type="text" id="upload-emote-name" placeholder="小哭米">
-      <label>选择图片：</label>
-      <input type="file" id="upload-emote-file" accept="image/*">
-      <button id="upload-emote-btn" class="control-btn">上传表情</button>
+      <label>选择图片（可多选批量上传，名称取文件名）：</label>
+      <input type="file" id="upload-emote-file" accept="image/*" multiple>
+      <button id="upload-emote-btn" class="control-btn">批量上传表情</button>
     </div>
 
     <div class="upload-form" id="upload-voice-form">
