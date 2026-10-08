@@ -168,40 +168,6 @@ description: 点击按钮播放语音 / 浏览表情
     </div>
   </section>
 
-            <div class="slot-reels" id="slot-reels"></div>
-            <div class="slot-controls">
-              <div class="slot-info">得分：<span id="slot-score">0</span> / 1000</div>
-              <button id="slot-spin" class="control-btn big">旋转</button>
-              <button id="slot-reset" class="control-btn">重开</button>
-              <div id="slot-result" class="slot-result"></div>
-            </div>
-          </div>
-        </div>
-
-        <div class="game-instance" id="game-breakout" data-game="breakout">
-          <h2 class="game-title">熊猫打砖块</h2>
-          <canvas id="breakout-canvas" width="420" height="620"></canvas>
-          <div class="breakout-controls">
-            <button id="breakout-start" class="control-btn big">开始</button>
-            <div class="breakout-score">得分：<span id="breakout-score">0</span></div>
-          </div>
-          <p class="breakout-tip">移动鼠标/手指控制挡板，击碎所有砖块进入下一关。</p>
-        </div>
-
-        <div class="game-instance" id="game-merge" data-game="merge">
-          <h2 class="game-title">合成熊猫</h2>
-          <canvas id="merge-canvas" width="400" height="600"></canvas>
-          <p class="merge-tip">移动鼠标选位置，点击掉落；相同表情球碰撞会合成更大的球。</p>
-        </div>
-
-        <div class="game-instance" id="game-flappy" data-game="flappy">
-          <h2 class="game-title">李豆沙 Flappy</h2>
-          <canvas id="flappy-canvas" width="400" height="600"></canvas>
-          <p class="flappy-tip">点击或按空格键跳跃，避开管道。</p>
-        </div>
-      </div>
-    </div>
-  </div>
 
   <!-- 管理上传面板（默认隐藏，登录后显示） -->
   <section id="admin-panel" class="admin-panel" style="display:none;">
@@ -269,14 +235,13 @@ description: 点击按钮播放语音 / 浏览表情
     <p class="disclaimer-line">本站为爱好者作品，和PSPLIVE官方没有关联</p>
   </footer>
 </div>
-
   <!-- 游戏弹窗 -->
   <div id="game-modal" class="game-modal" style="display:none;" aria-hidden="true">
     <div class="game-modal-backdrop" data-close-modal></div>
     <div class="game-modal-content">
       <button class="game-modal-close" data-close-modal aria-label="关闭">&times;</button>
       <div class="game-modal-body" id="game-modal-body">
-        <div class="game-instance" id="game-slot" data-game="slot">
+        <div class="game-instance" id="game-slot" data-game="slot" style="display:none;">
           <h2 class="game-title">熊猫老虎机</h2>
           <div class="slot-machine">
             <div class="slot-modes">
@@ -284,9 +249,43 @@ description: 点击按钮播放语音 / 浏览表情
               <button class="slot-mode" data-mode="normal">普通（4图）</button>
               <button class="slot-mode" data-mode="hard">困难（5图）</button>
             </div>
+            <div class="slot-reels" id="slot-reels"></div>
+            <div class="slot-controls">
+              <div class="slot-info">得分：<span id="slot-score">0</span> / 1000</div>
+              <button id="slot-spin" class="control-btn big">旋转</button>
+              <button id="slot-reset" class="control-btn">重开</button>
+              <div id="slot-result" class="slot-result"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="game-instance" id="game-breakout" data-game="breakout" style="display:none;">
+          <h2 class="game-title">熊猫打砖块</h2>
+          <canvas id="breakout-canvas" width="420" height="620"></canvas>
+          <div class="breakout-controls">
+            <button id="breakout-start" class="control-btn big">开始</button>
+            <div class="breakout-score">得分：<span id="breakout-score">0</span></div>
+          </div>
+          <p class="breakout-tip">移动鼠标/手指控制挡板，击碎所有砖块进入下一关。</p>
+        </div>
+
+        <div class="game-instance" id="game-merge" data-game="merge" style="display:none;">
+          <h2 class="game-title">合成熊猫</h2>
+          <canvas id="merge-canvas" width="400" height="600"></canvas>
+          <p class="merge-tip">移动鼠标选位置，点击掉落；相同表情球碰撞会合成更大的球。</p>
+        </div>
+
+        <div class="game-instance" id="game-flappy" data-game="flappy" style="display:none;">
+          <h2 class="game-title">李豆沙 Flappy</h2>
+          <canvas id="flappy-canvas" width="400" height="600"></canvas>
+          <p class="flappy-tip">点击或按空格键跳跃，避开管道。</p>
+        </div>
+      </div>
+    </div>
+  </div>
 
 
-<link rel="stylesheet" href="{{ '/assets/css/style.css' | relative_url }}?v=2">
+<link rel="stylesheet" href="{{ '/assets/css/style.css' | relative_url }}?v=3">
 <script>
   window.SITE_BASE = "{{ '/' | relative_url }}";
   // Cloudflare Worker 上传服务地址
@@ -294,9 +293,9 @@ description: 点击按钮播放语音 / 浏览表情
   // 表情元数据（构建时注入），用于分类管理与多分类渲染
   window.EMOTE_META = {{ site.data.emotes_meta | jsonify }};
 </script>
-<script src="{{ '/assets/js/player.js' | relative_url }}?v=2" defer></script>
-<script src="{{ '/assets/js/game-modal.js' | relative_url }}?v=2" defer></script>
-<script src="{{ '/assets/js/game-slot.js' | relative_url }}?v=2" defer></script>
-<script src="{{ '/assets/js/game-breakout.js' | relative_url }}?v=2" defer></script>
-<script src="{{ '/assets/js/game-merge.js' | relative_url }}?v=2" defer></script>
-<script src="{{ '/assets/js/game-flappy.js' | relative_url }}?v=2" defer></script>
+<script src="{{ '/assets/js/player.js' | relative_url }}?v=3" defer></script>
+<script src="{{ '/assets/js/game-modal.js' | relative_url }}?v=3" defer></script>
+<script src="{{ '/assets/js/game-slot.js' | relative_url }}?v=3" defer></script>
+<script src="{{ '/assets/js/game-breakout.js' | relative_url }}?v=3" defer></script>
+<script src="{{ '/assets/js/game-merge.js' | relative_url }}?v=3" defer></script>
+<script src="{{ '/assets/js/game-flappy.js' | relative_url }}?v=3" defer></script>
