@@ -45,15 +45,15 @@
     // 场地以 (0,0) 为中心，半边长 hw 随自己变大而扩大（和体型同比例），镜头同时拉远。
     // 熊猫数量按“镜头能看到场地的几分之一”来定，让屏幕里的熊猫密度一直和开局时差不多：既不挤，也不空。
     const HW_START = 800, HW_MAX = 2800;
-    const NPC_BASE = 26, NPC_MAX = 90;
+    const NPC_BASE = 26, NPC_MAX = 110;
     let hw = HW_START, hwTarget = HW_START, hwAnnounced = HW_START;
     const halfFor = (n) => Math.min(HW_MAX, HW_START * (radiusOf(n) / radiusOf(3)));
     const scaleFor = (r) => Math.max(0.32, Math.pow(radiusOf(3) / r, 0.8));
     const worldPerView = (half, r) => (half * 2) ** 2 / ((W / scaleFor(r)) * (H / scaleFor(r)));
     const npcCount = () => {
       const ratio = worldPerView(hw, player.r) / worldPerView(HW_START, radiusOf(3));
-      // 开局保持 26 只；之后随场地变大略微加密一点（系数 1.8），中期屏幕里大约 3~4 只
-      return Math.max(NPC_BASE, Math.min(NPC_MAX, Math.round(NPC_BASE * (1 + (ratio - 1) * 1.8))));
+      // 开局保持 26 只；之后随场地变大加密（系数 3），中期屏幕里大约 4~5 只
+      return Math.max(NPC_BASE, Math.min(NPC_MAX, Math.round(NPC_BASE * (1 + (ratio - 1) * 3))));
     };
     const PLAYER_SPEED = 2.7;
     const GOAL = 22966160;        // 胜利数字
@@ -71,9 +71,9 @@
     };
     const rand = (a, b) => a + Math.random() * (b - a);
 
-    // 按玩家当前数字生成一只 NPC：约 62% 比你小（能吃），38% 比你大（危险）
+    // 按玩家当前数字生成一只 NPC：开局约 62% 比你小（能吃），长到 30 以后变成 58%（危险的多一点）
     function npcNumber(n) {
-      if (Math.random() < 0.62) {
+      if (Math.random() < (n < 30 ? 0.62 : 0.58)) {
         // 比你小：[n×0.15, n) 之间，至少为 1，且一定 < n
         return Math.min(n - 1, Math.max(1, Math.floor(rand(Math.max(1, n * 0.15), n))));
       }
@@ -304,15 +304,18 @@
       if (Math.abs(player.vx) > 0.2) player.face = Math.sign(player.vx);
       clampToWorld(player);
 
-      // NPC：比你大的会追（比你慢一点），比你小的会躲（更慢），其余随便逛
+      // NPC：比你大的会追（比你慢一点），比你小的会躲（更慢），其余随便逛。
+      // 发现距离随镜头拉远而变大，保证在屏幕上看起来差不多远就会开始追 / 逃
+      const zoomK = Math.pow(1 / view.scale, 0.7);
+      const chaseR = 260 * zoomK, fleeR = 175 * zoomK;
       for (const npc of npcs) {
         const ddx = player.x - npc.x, ddy = player.y - npc.y;
         const dist = Math.hypot(ddx, ddy);
         let vx, vy;
-        if (npc.n > player.n && dist < 240) {
-          vx = (ddx / dist) * speed * 0.8; vy = (ddy / dist) * speed * 0.8;
-        } else if (npc.n < player.n && dist < 170) {
-          vx = (-ddx / dist) * speed * 0.62; vy = (-ddy / dist) * speed * 0.62;
+        if (npc.n > player.n && dist < chaseR) {
+          vx = (ddx / dist) * speed * 0.84; vy = (ddy / dist) * speed * 0.84;
+        } else if (npc.n < player.n && dist < fleeR) {
+          vx = (-ddx / dist) * speed * 0.66; vy = (-ddy / dist) * speed * 0.66;
         } else {
           if (--npc.wanderT <= 0) { npc.dir += rand(-1.5, 1.5); npc.wanderT = rand(40, 140); }
           vx = Math.cos(npc.dir) * speed * 0.35; vy = Math.sin(npc.dir) * speed * 0.35;
