@@ -30,6 +30,9 @@
     set('breakout', best(readNum('breakout-best')));
     set('merge', best(readNum('panda_merge_high_score')));
     set('flappy', best(readNum('flappy_best')));
+    set('jump', best(readNum('jump_best')));
+    const nb = readNum('number_best');
+    set('number', nb > 1 ? `最大长到<b>${nb}</b>` : '');
     const clears = readSlotClears().filter(m => SLOT_NAMES[m]);
     set('slot', clears.length ? `已通关<b>${clears.map(m => SLOT_NAMES[m]).join(' / ')}</b>` : '');
   }
