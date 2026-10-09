@@ -29,13 +29,32 @@
       this.emoteImages = [];
       this.imagesLoaded = false;
 
+      // 11 个等级用的表情：手动挑选，彼此长得不一样，从小熊猫一路合成到李豆沙本人。
+      // 以前是直接取表情列表的前 11 个，里面有两张 gif 第一帧几乎一样（canvas 只画 gif 第一帧），
+      // 看起来就像大球和小球用了同一张图。
+      const MERGE_LEVELS = [
+        '小电视_404.jpg',
+        '熊猫_妈妈（2）.jpg',
+        '熊猫_只是熊猫.jpg',
+        'kimo猪.jpg',
+        '蛋糕.jpg',
+        '魔法熊猫.jpg',
+        '点子生成中.jpg',
+        '爱心小李.jpg',
+        '70f9cc66d0b618852551e64f13e52ac1_0.png',   // 熊猫_被指到的是~（3）
+        '熊猫卖萌.jpg',
+        '耳朵飞飞.jpg',
+      ];
       const meta = window.EMOTE_META || { items: [] };
-      const items = [];
-      const all = meta.items.filter(i => i.file);
-      if (!all.length) all.push({ file: '', name: '' });
-      for (let i = 0; i < 11; i++) {
-        items.push(all[i % all.length]);
-      }
+      const pool = meta.items.filter(i => i.file && !/\.gif$/i.test(i.file));
+      const byFile = new Map(pool.map(i => [i.file, i]));
+      const used = new Set();
+      const items = MERGE_LEVELS.map(f => byFile.get(f)).map(item => {
+        // 某张被删了 / 改名了：用一张还没用过的非 gif 表情补上，保证 11 级各不相同
+        if (!item || used.has(item.file)) item = pool.find(i => !used.has(i.file)) || { file: '', name: '' };
+        used.add(item.file);
+        return item;
+      });
       this.emoteTypes = items.map((item, idx) => ({
         name: item.name || `Lv.${idx + 1}`,
         radius: [20, 25, 32, 40, 50, 62, 76, 92, 110, 132, 158][idx],
@@ -440,7 +459,10 @@
           this.ctx.arc(fruit.x, fruit.y, fruit.radius, 0, Math.PI * 2);
           this.ctx.closePath();
           this.ctx.clip();
-          this.ctx.drawImage(img, fruit.x - fruit.radius, fruit.y - fruit.radius, size, size);
+          // 按正方形居中裁切（不拉伸变形），竖图稍微偏上取，脸一般在上半部分
+          const iw = img.naturalWidth, ih = img.naturalHeight, side = Math.min(iw, ih);
+          const sx = (iw - side) / 2, sy = ih > iw ? (ih - side) * 0.3 : (ih - side) / 2;
+          this.ctx.drawImage(img, sx, sy, side, side, fruit.x - fruit.radius, fruit.y - fruit.radius, size, size);
           this.ctx.restore();
 
           this.ctx.beginPath();
