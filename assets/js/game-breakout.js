@@ -1,6 +1,6 @@
 /**
  * 熊猫打砖块 - 经典 Breakout
- * 球是一只熊猫，挡板是一根竹子；每行有一块“表情砖”，打掉得 30 分（普通砖 10 分）。
+ * 球是一只熊猫，挡板是一根竹子；每行有一块“熊猫砖”，打掉得 30 分（普通砖 10 分）。球碰到砖块和挡板会迸出星星。
  * 关卡越多，砖块行数越多，球速越快
  */
 (function () {
@@ -21,7 +21,7 @@
     const W = canvas.width, H = canvas.height;
     const PADDLE_W_BASE = 96, PADDLE_H = 16, PADDLE_Y = H - 50;
     const BALL_R = 11, BALL_SPEED_BASE = 4.4;
-    const BRICK_PTS = 10, EMOTE_PTS = 30;
+    const BRICK_PTS = 10, PANDA_PTS = 30;
     const BRICK_COLS = 6, BRICK_H = 36, BRICK_GAP = 6;
     const MARGIN_X = 16, MARGIN_TOP = 70;
     const BEST_KEY = 'breakout-best';
@@ -35,23 +35,9 @@
     let ball = null;
     let bricks = [];
     let rafId;
-    let particles = [];   // 砖块碎屑
+    let particles = [];   // 星星特效
     let popups = [];      // “+30” 飘字
 
-    // 表情砖用的图片：从非 gif 表情里随机预加载一批
-    const base = (window.SITE_BASE || '/').replace(/\/$/, '');
-    const emoteImgs = (() => {
-      const items = ((window.EMOTE_META || {}).items || []).filter(i => i.file && !/\.gif$/i.test(i.file));
-      for (let i = items.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [items[i], items[j]] = [items[j], items[i]];
-      }
-      return items.slice(0, 16).map(it => {
-        const img = new Image();
-        img.src = `${base}/assets/images/emotes/${it.file}`;
-        return img;
-      });
-    })();
 
     function clamp(v, min, max) { return Math.max(min, Math.min(max, v)); }
 
@@ -71,11 +57,10 @@
       const brickW = (W - MARGIN_X * 2 - totalGapX) / BRICK_COLS;
       bricks = [];
       for (let r = 0; r < rows; r++) {
-        const emoteCol = Math.floor(Math.random() * BRICK_COLS); // 每行一块表情砖
+        const pandaCol = Math.floor(Math.random() * BRICK_COLS); // 每行一块熊猫砖
         for (let c = 0; c < BRICK_COLS; c++) {
-          const isEmote = c === emoteCol && emoteImgs.length > 0;
           bricks.push({
-            emote: isEmote ? emoteImgs[Math.floor(Math.random() * emoteImgs.length)] : null,
+            panda: c === pandaCol,
             x: MARGIN_X + c * (brickW + BRICK_GAP),
             y: MARGIN_TOP + r * (BRICK_H + BRICK_GAP),
             w: brickW,
@@ -148,22 +133,46 @@
       }
     }
 
-    function burst(b) {
-      const color = b.emote ? '#ffffff' : b.color;
-      for (let i = 0; i < 8; i++) {
+    // 星星特效：在 (x, y) 迸出 n 颗小星星
+    const STAR_COLORS = ['#fff6c2', '#ffd76a', '#ffffff', '#ffb3c7', '#bcd2ff'];
+    function sparkle(x, y, n, power = 1) {
+      for (let i = 0; i < n; i++) {
+        const a = Math.random() * Math.PI * 2;
+        const v = (1.2 + Math.random() * 2.2) * power;
         particles.push({
-          x: b.x + Math.random() * b.w, y: b.y + Math.random() * b.h,
-          vx: (Math.random() - 0.5) * 3, vy: Math.random() * -2 - 0.5,
-          life: 1, color,
+          x, y,
+          vx: Math.cos(a) * v, vy: Math.sin(a) * v - 0.6,
+          size: 4.5 + Math.random() * 4.5,
+          rot: Math.random() * Math.PI, vr: (Math.random() - 0.5) * 0.3,
+          life: 1, decay: 0.016 + Math.random() * 0.012,
+          color: STAR_COLORS[Math.floor(Math.random() * STAR_COLORS.length)],
         });
       }
     }
 
+    function burst(b) {
+      sparkle(b.x + b.w / 2, b.y + b.h / 2, b.panda ? 16 : 8, b.panda ? 1.3 : 1);
+    }
+
     function stepFx() {
-      for (const p of particles) { p.x += p.vx; p.y += p.vy; p.vy += 0.15; p.life -= 0.03; }
+      for (const p of particles) {
+        p.x += p.vx; p.y += p.vy; p.vy += 0.08; p.vx *= 0.98;
+        p.rot += p.vr; p.life -= p.decay;
+      }
       particles = particles.filter(p => p.life > 0);
       for (const q of popups) { q.t += 1; q.y -= 0.6; }
       popups = popups.filter(q => q.t < 50);
+    }
+
+    function starPath(x, y, r, rot) {
+      ctx.beginPath();
+      for (let i = 0; i < 10; i++) {
+        const rr = i % 2 === 0 ? r : r * 0.45;
+        const a = rot + (i * Math.PI) / 5 - Math.PI / 2;
+        const px = x + Math.cos(a) * rr, py = y + Math.sin(a) * rr;
+        if (i === 0) ctx.moveTo(px, py); else ctx.lineTo(px, py);
+      }
+      ctx.closePath();
     }
 
     function update() {
@@ -188,6 +197,7 @@
         ball.vx = Math.cos(angle) * ball.speed;
         ball.vy = Math.sin(angle) * ball.speed;
         ball.y = PADDLE_Y - PADDLE_H / 2 - ball.r - 1;
+        sparkle(ball.x, PADDLE_Y - PADDLE_H / 2, 6, 0.8);
       }
 
       // 砖块
@@ -195,10 +205,10 @@
         if (b.broken) continue;
         if (circleRectHit(ball, b)) {
           b.broken = true;
-          const pts = b.emote ? EMOTE_PTS : BRICK_PTS;
+          const pts = b.panda ? PANDA_PTS : BRICK_PTS;
           score += pts;
           burst(b);
-          if (b.emote) popups.push({ x: b.x + b.w / 2, y: b.y + b.h / 2, t: 0, text: `+${pts}` });
+          if (b.panda) popups.push({ x: b.x + b.w / 2, y: b.y + b.h / 2, t: 0, text: `+${pts}` });
           reflectOffBrick(b);
           updateScore();
           break;
@@ -260,27 +270,20 @@
       }
     }
 
-    // 表情砖：白底圆角 + 表情图（居中裁成方形） + 粉色描边
-    function drawEmoteBrick(b) {
-      ctx.save();
+    // 熊猫砖：白底圆角 + 🐼（和“合成熊猫”卡片上的图标一样）+ 粉色描边
+    function drawPandaBrick(b) {
       ctx.beginPath();
       ctx.roundRect(b.x, b.y, b.w, b.h, 7);
-      ctx.fillStyle = '#fff';
+      ctx.fillStyle = '#ffffff';
       ctx.fill();
-      ctx.clip();
-      const img = b.emote;
-      if (img && img.complete && img.naturalWidth) {
-        // cover：按砖块宽度铺满，取图片中间偏上（脸通常在上半部分）
-        const scale = b.w / img.naturalWidth;
-        const dh = img.naturalHeight * scale;
-        ctx.drawImage(img, b.x, b.y - Math.max(0, (dh - b.h) * 0.3), b.w, dh);
-      }
-      ctx.restore();
-      ctx.beginPath();
-      ctx.roundRect(b.x + 1, b.y + 1, b.w - 2, b.h - 2, 6);
       ctx.strokeStyle = '#ff8fb3';
       ctx.lineWidth = 2;
       ctx.stroke();
+      ctx.font = `${Math.round(b.h * 0.72)}px 'Segoe UI Emoji', 'Apple Color Emoji', 'Noto Color Emoji', sans-serif`;
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText('🐼', b.x + b.w / 2, b.y + b.h / 2 + 1);
+      ctx.textBaseline = 'alphabetic';
     }
 
     // 挡板：一根横放的竹子
@@ -361,7 +364,7 @@
       // 砖块
       for (const b of bricks) {
         if (b.broken) continue;
-        if (b.emote) { drawEmoteBrick(b); continue; }
+        if (b.panda) { drawPandaBrick(b); continue; }
         ctx.fillStyle = b.color;
         ctx.beginPath();
         ctx.roundRect(b.x, b.y, b.w, b.h, 7);
@@ -372,12 +375,16 @@
         ctx.fill();
       }
 
-      // 碎屑 + 飘字
+      // 星星 + 飘字
+      ctx.shadowColor = 'rgba(255, 230, 150, 0.8)';
+      ctx.shadowBlur = 6;
       for (const p of particles) {
         ctx.globalAlpha = Math.max(0, p.life);
         ctx.fillStyle = p.color;
-        ctx.fillRect(p.x - 2, p.y - 2, 4, 4);
+        starPath(p.x, p.y, p.size * (0.6 + 0.4 * p.life), p.rot);
+        ctx.fill();
       }
+      ctx.shadowBlur = 0;
       ctx.globalAlpha = 1;
       ctx.textAlign = 'center';
       ctx.font = `600 18px ${FONT}`;
@@ -392,7 +399,7 @@
       if (ball) drawPanda(ball.x, ball.y, ball.r, ball.spin);
 
       if (state === 'ready') {
-        overlay(`第 ${level} 关`, `表情砖 ${EMOTE_PTS} 分，普通砖 ${BRICK_PTS} 分`, '点击画面或按空格发球', 0.4);
+        overlay(`第 ${level} 关`, `熊猫砖 ${PANDA_PTS} 分，普通砖 ${BRICK_PTS} 分`, '点击画面或按空格发球', 0.4);
       } else if (state === 'over') {
         overlay('游戏结束', `得分 ${score}　最高 ${best}`, '点击画面再来一局');
       }
