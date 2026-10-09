@@ -1,6 +1,6 @@
 /**
  * 熊猫老虎机 - 三种难度模式
- * 简单 3 图 / 普通 4 图 / 困难 5 图，累计到 1000 分胜利
+ * 初始 500 分，每次旋转扣除底注；3 个相同 +3×底注，2 个相同 +1×底注
  */
 (function () {
   'use strict';
@@ -19,11 +19,12 @@
     const modeBtns = document.querySelectorAll('.slot-mode');
     if (!reelsRoot || !spinBtn || !scoreEl) return;
 
+    const START_SCORE = 500;
     const TARGET = 1000;
     const MODES = {
-      easy: { reels: 3, name: '简单', matchAll: 200, matchSome: 20, none: 5 },
-      normal: { reels: 4, name: '普通', matchAll: 400, matchSome: 25, none: 5 },
-      hard: { reels: 5, name: '困难', matchAll: 600, matchSome: 30, none: 5 },
+      easy:   { reels: 3, name: '简单', baseBet: 10 },
+      normal: { reels: 4, name: '普通', baseBet: 20 },
+      hard:   { reels: 5, name: '困难', baseBet: 30 },
     };
 
     const rand = (arr) => arr[Math.floor(Math.random() * arr.length)];
@@ -31,19 +32,23 @@
     const sleep = (ms) => new Promise(r => setTimeout(r, ms));
 
     let mode = 'easy';
-    let score = 0;
+    let score = START_SCORE;
     let isSpinning = false;
     let won = false;
     let reels = [];
 
     function buildReels() {
       const count = MODES[mode].reels;
-      // 4 图用 2x2 布局，3/5 图保持 3 列（5 图为 3+2）
+      // 4 图用 2x2，3/5 图保持 3 列（5 图为 3+2）
       reelsRoot.style.gridTemplateColumns = (count === 4) ? 'repeat(2, 1fr)' : 'repeat(3, 1fr)';
       reelsRoot.innerHTML = Array.from({ length: count }, (_, i) =>
         `<div class="slot-reel"><img id="slot-r${i}" src="${symbolSrc(rand(all))}" alt="reel"></div>`
       ).join('');
       reels = Array.from({ length: count }, (_, i) => document.getElementById(`slot-r${i}`));
+    }
+
+    function updateScoreDisplay() {
+      scoreEl.textContent = score;
     }
 
     function setMode(name) {
@@ -54,24 +59,39 @@
     }
 
     function resetGame() {
-      score = 0;
+      score = START_SCORE;
       won = false;
-      scoreEl.textContent = '0';
+      updateScoreDisplay();
       resultEl.textContent = '';
       spinBtn.disabled = false;
       spinBtn.textContent = '旋转';
       buildReels();
     }
 
-    function calcScore(results) {
+    function calcOutcome(results) {
       const counts = {};
       results.forEach(s => { counts[s.file] = (counts[s.file] || 0) + 1; });
       const maxCount = Math.max(...Object.values(counts));
       const cfg = MODES[mode];
+      const bet = cfg.baseBet;
 
-      if (maxCount === results.length) return { points: cfg.matchAll, msg: `🎉 ${cfg.name}大奖 +${cfg.matchAll}！` };
-      if (maxCount >= 2) return { points: maxCount * cfg.matchSome, msg: `✨ ${maxCount} 连！+${maxCount * cfg.matchSome}` };
-      return { points: cfg.none, msg: `💨 再来一次 +${cfg.none}` };
+      // 先扣底注
+      let change = -bet;
+      let msg = `-${bet} 底注`;
+
+      if (maxCount === results.length) {
+        const win = bet * 3;
+        change += win;
+        msg += ` · 🎉 ${cfg.name}大奖 +${win}`;
+      } else if (maxCount >= 2) {
+        const win = bet;
+        change += win;
+        msg += ` · ✨ ${maxCount} 连 +${win}`;
+      } else {
+        msg += ' · 💨 未中奖';
+      }
+
+      return { change, msg };
     }
 
     async function spinReel(el, ticks) {
@@ -86,8 +106,13 @@
 
     async function spin() {
       if (isSpinning || won) return;
+      if (score < MODES[mode].baseBet) {
+        resultEl.textContent = '💸 分数不足，请重开';
+        return;
+      }
+
       isSpinning = true;
-      resultEl.textContent = '';
+      resultEl.textContent = `-${MODES[mode].baseBet} 底注…`;
       spinBtn.disabled = true;
 
       const cfg = MODES[mode];
@@ -97,15 +122,19 @@
         results.push(await spinReel(reels[i], ticks[i]));
       }
 
-      const outcome = calcScore(results);
-      score += outcome.points;
-      scoreEl.textContent = score;
+      const outcome = calcOutcome(results);
+      score += outcome.change;
+      updateScoreDisplay();
       resultEl.textContent = outcome.msg;
 
       if (score >= TARGET) {
         won = true;
         resultEl.textContent = `🏆 恭喜！达到 ${TARGET} 分，你赢了！`;
         spinBtn.textContent = '已通关';
+      } else if (score <= 0) {
+        won = true; // 结束
+        resultEl.textContent = '💸 分数耗尽，游戏结束';
+        spinBtn.textContent = '已结束';
       } else {
         spinBtn.disabled = false;
       }
@@ -119,6 +148,7 @@
     resetBtn.addEventListener('click', resetGame);
 
     buildReels();
+    updateScoreDisplay();
 
     window.__gameHooks.slot = (action) => {
       if (action === 'open') resetGame();

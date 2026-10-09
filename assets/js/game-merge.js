@@ -115,7 +115,9 @@
       this.canvas.addEventListener('click', () => {
         if (this.gameOver) {
           this.init();
-        } else if (!this.isPaused) {
+        } else if (this.isPaused) {
+          this.togglePause();
+        } else {
           this.dropFruit();
         }
       });
@@ -430,10 +432,8 @@
 
   window.addEventListener('load', () => {
     const game = new PandaMergeGame();
-    if (window.__gameHooks) {
-      window.__gameHooks.merge = (action) => {
-        if (action === 'open') game.init();
-      };
-    }
+    window.__gameHooks.merge = (action) => {
+      if (action === 'open') game.init();
+    };
   });
 })();

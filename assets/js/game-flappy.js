@@ -24,7 +24,7 @@
 
     const GROUND_H = 60;
     const BIRD_X = 80;
-    const BIRD_R = 24; // 比之前大
+    const BIRD_R = 32; // 比原来更大
     const GRAVITY = 0.35;
     const JUMP = -6.5;
     const PIPE_W = 60;
@@ -140,8 +140,6 @@
       ctx.rotate(bird.rot);
       if (birdImg && birdImg.complete && birdImg.naturalWidth) {
         const s = BIRD_R * 2;
-        // 原表情图片方向可能反了，这里垂直翻转
-        ctx.scale(1, -1);
         ctx.drawImage(birdImg, -s / 2, -s / 2, s, s);
       } else {
         ctx.fillStyle = '#f5c542';

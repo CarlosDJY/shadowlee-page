@@ -10,7 +10,6 @@
     if (!canvas) return;
     const ctx = canvas.getContext('2d');
     const scoreEl = document.getElementById('breakout-score');
-    const startBtn = document.getElementById('breakout-start');
 
     const W = canvas.width, H = canvas.height;
     const PADDLE_W_BASE = 96, PADDLE_H = 16, PADDLE_Y = H - 50;
@@ -66,7 +65,6 @@
       state = 'ready';
       buildBricks();
       resetBall();
-      if (startBtn) startBtn.textContent = '开始';
       draw();
       updateScore();
     }
@@ -90,10 +88,8 @@
         ball.vx = Math.cos(angle) * ball.speed;
         ball.vy = Math.sin(angle) * ball.speed;
         state = 'playing';
-        if (startBtn) startBtn.textContent = '重开';
       } else if (state === 'ready') {
         state = 'playing';
-        if (startBtn) startBtn.textContent = '重开';
       }
     }
 
@@ -158,7 +154,7 @@
         if (lives <= 0) {
           state = 'over';
           saveBest();
-          if (startBtn) startBtn.textContent = '再来一次';
+          // game over
         } else {
           resetBall();
           state = 'ready';
@@ -171,7 +167,7 @@
         buildBricks();
         resetBall();
         state = 'ready';
-        if (startBtn) startBtn.textContent = `第 ${level} 关 · 继续`;
+        // next level ready
       }
     }
 
@@ -275,15 +271,11 @@
       e.preventDefault();
       if (e.touches[0]) movePaddle(e.touches[0].clientX);
     }, { passive: false });
-    canvas.addEventListener('click', () => {
-      if (state === 'ready') launchBall();
-      else if (state === 'over') resetGame();
-    });
+    canvas.addEventListener('click', onStartBtn);
     window.addEventListener('keydown', e => {
       if (e.key === ' ' || e.key === 'Enter') {
         e.preventDefault();
-        if (state === 'ready') launchBall();
-        else if (state === 'over') resetGame();
+        onStartBtn();
       }
       if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
         const step = (e.key === 'ArrowLeft' ? -1 : 1) * 24;
@@ -291,10 +283,10 @@
       }
     });
 
-    if (startBtn) startBtn.addEventListener('click', () => {
+    function onStartBtn() {
       if (state === 'ready') launchBall();
-      else resetGame();
-    });
+      else if (state === 'over' || state === 'won') resetGame();
+    }
 
     readBest();
     resetGame();
