@@ -411,7 +411,7 @@
     function isOpen() { return !window.__gameModal || window.__gameModal.current() === 'breakout'; }
     function loop(now) {
       rafId = requestAnimationFrame(loop);
-      const dt = Math.min(100, now - lastTime);
+      const dt = Math.max(0, Math.min(100, now - lastTime));
       lastTime = now;
       if (!isOpen()) { acc = 0; return; }
       acc += dt;

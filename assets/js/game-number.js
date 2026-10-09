@@ -3,6 +3,7 @@
  * 每只熊猫头顶一个数字。碰到比自己小的就吃掉，对方的数字加到自己身上；碰到比自己大的就被吃，游戏结束。
  * 头顶数字绿色 = 能吃，红色 = 危险。比你大的会追你，比你小的会跑。
  * 场地比屏幕大，镜头跟着自己走，越大镜头拉得越远。
+ * 自己是“咬Kmx”表情；场地是一张野餐桌布（粉格子 + 花边 + 散落的竹叶和团子）。
  */
 (function () {
   'use strict';
@@ -19,12 +20,32 @@
     const bestEl = document.getElementById('number-best');
     const eatenEl = document.getElementById('number-eaten');
     const BEST_KEY = 'number_best';
+    const base = (window.SITE_BASE || '/').replace(/\/$/, '');
+
+    // 玩家形象：“咬Kmx”表情（找不到就退回画熊猫脸）
+    const meItem = ((window.EMOTE_META || {}).items || []).find(i => i.name === '咬Kmx' || /咬kmx/i.test(i.file || ''));
+    const meImg = new Image();
+    if (meItem) meImg.src = `${base}/assets/images/emotes/${meItem.file}`;
+
+    // 桌布：粉色格子图案（一格 80 单位，两条半透明色带交叉）
+    const gingham = (() => {
+      const c = document.createElement('canvas');
+      c.width = c.height = 80;
+      const g = c.getContext('2d');
+      g.fillStyle = '#fffafc'; g.fillRect(0, 0, 80, 80);
+      g.fillStyle = 'rgba(255, 143, 179, 0.16)';
+      g.fillRect(0, 0, 40, 80);
+      g.fillRect(0, 0, 80, 40);
+      g.fillStyle = 'rgba(255, 255, 255, 0.5)';
+      g.fillRect(0, 38, 80, 1); g.fillRect(38, 0, 1, 80);
+      return ctx.createPattern(c, 'repeat');
+    })();
 
     const WORLD = 1600;           // 正方形场地边长
     const NPC_COUNT = 26;
     const PLAYER_SPEED = 2.7;
 
-    let player, npcs, phase, best, eaten, effects, toasts, view, keys = {}, pointer = null;
+    let player, npcs, phase, best, eaten, effects, toasts, view, decos = [], keys = {}, pointer = null;
     try { best = parseInt(localStorage.getItem(BEST_KEY) || '0', 10) || 0; } catch (e) { best = 0; }
 
     const radiusOf = (n) => 13 + Math.log2(n + 1) * 5.5;
@@ -72,6 +93,11 @@
       }
       eaten = 0;
       effects = [];
+      // 桌布上的装饰：竹叶和团子，每局随机摆
+      decos = Array.from({ length: 70 }, () => ({
+        x: rand(40, WORLD - 40), y: rand(40, WORLD - 40),
+        rot: rand(0, Math.PI * 2), kind: Math.random() < 0.65 ? 'leaf' : 'dango', s: rand(0.8, 1.3),
+      }));
       toasts = [];
       phase = 'ready';
       updateHud();
@@ -217,6 +243,59 @@
     // ---- 绘制 ----
     const BODY_TINTS = ['#ffffff', '#fff3f7', '#f3f6ff', '#f6fff2'];
 
+    function drawMe(o) {
+      if (!(meImg.complete && meImg.naturalWidth)) { drawPanda(o, true); return; }
+      const r = o.r;
+      ctx.save();
+      ctx.translate(o.x, o.y);
+      ctx.fillStyle = 'rgba(19, 32, 74, 0.14)';
+      ctx.beginPath(); ctx.ellipse(0, r * 0.95, r * 0.95, r * 0.3, 0, 0, Math.PI * 2); ctx.fill();
+      ctx.save();
+      ctx.beginPath(); ctx.arc(0, 0, r, 0, Math.PI * 2); ctx.clip();
+      // 跟着移动方向左右翻转
+      if ((o.face || 1) < 0) ctx.scale(-1, 1);
+      ctx.drawImage(meImg, -r, -r, r * 2, r * 2);
+      ctx.restore();
+      ctx.lineWidth = Math.max(3, r * 0.1);
+      ctx.strokeStyle = '#fff';
+      ctx.beginPath(); ctx.arc(0, 0, r, 0, Math.PI * 2); ctx.stroke();
+      ctx.lineWidth = Math.max(2, r * 0.06);
+      ctx.strokeStyle = '#2f6fed';
+      ctx.beginPath(); ctx.arc(0, 0, r + ctx.lineWidth, 0, Math.PI * 2); ctx.stroke();
+      ctx.restore();
+    }
+
+    function drawDeco(d) {
+      ctx.save();
+      ctx.translate(d.x, d.y);
+      ctx.rotate(d.rot);
+      ctx.scale(d.s, d.s);
+      if (d.kind === 'leaf') {
+        // 一小枝竹叶
+        ctx.strokeStyle = 'rgba(79, 140, 80, 0.55)';
+        ctx.lineWidth = 2;
+        ctx.beginPath(); ctx.moveTo(-14, 0); ctx.lineTo(14, 0); ctx.stroke();
+        ctx.fillStyle = 'rgba(124, 197, 118, 0.55)';
+        for (const [x, a] of [[-6, -0.6], [2, 0.5], [9, -0.4]]) {
+          ctx.save(); ctx.translate(x, 0); ctx.rotate(a);
+          ctx.beginPath(); ctx.ellipse(8, 0, 9, 2.6, 0, 0, Math.PI * 2); ctx.fill();
+          ctx.restore();
+        }
+      } else {
+        // 三色团子
+        ctx.strokeStyle = 'rgba(176, 132, 90, 0.6)';
+        ctx.lineWidth = 2;
+        ctx.beginPath(); ctx.moveTo(-20, 0); ctx.lineTo(16, 0); ctx.stroke();
+        const cols = ['rgba(255, 170, 196, 0.75)', 'rgba(255, 255, 255, 0.95)', 'rgba(150, 210, 140, 0.75)'];
+        cols.forEach((c, i) => {
+          ctx.fillStyle = c;
+          ctx.beginPath(); ctx.arc(-10 + i * 9, 0, 5, 0, Math.PI * 2); ctx.fill();
+          ctx.strokeStyle = 'rgba(19, 32, 74, 0.12)'; ctx.lineWidth = 1; ctx.stroke();
+        });
+      }
+      ctx.restore();
+    }
+
     function drawPanda(o, isPlayer) {
       const r = o.r;
       ctx.save();
@@ -278,22 +357,23 @@
       ctx.textAlign = 'center';
       ctx.fillStyle = '#fff';
       ctx.font = `600 34px ${FONT}`;
-      ctx.fillText(title, W / 2, H / 2 - 30);
+      const ty = H * 0.22; // 文字放在上方，不挡住画面中央的自己
+      ctx.fillText(title, W / 2, ty);
       if (sub) {
         ctx.font = `500 17px ${FONT}`;
         ctx.fillStyle = '#dbe6ff';
-        sub.split('\n').forEach((line, i) => ctx.fillText(line, W / 2, H / 2 + 6 + i * 24));
+        sub.split('\n').forEach((line, i) => ctx.fillText(line, W / 2, ty + 36 + i * 24));
       }
       if (hint) {
         ctx.font = `500 15px ${FONT}`;
         ctx.fillStyle = '#aebfe6';
-        ctx.fillText(hint, W / 2, H / 2 + 72);
+        ctx.fillText(hint, W / 2, ty + 102);
       }
     }
 
     function draw() {
-      // 场地外
-      ctx.fillStyle = '#c6d6f5';
+      // 场地外：浅蓝（和站点主题一致）
+      ctx.fillStyle = '#c9d8f6';
       ctx.fillRect(0, 0, W, H);
 
       ctx.save();
@@ -301,28 +381,37 @@
       ctx.scale(view.scale, view.scale);
       ctx.translate(-view.x, -view.y);
 
-      // 场地：冰蓝地面 + 网格
-      ctx.fillStyle = '#eef4ff';
+      // 场地：野餐桌布
+      const vx0 = view.x - W / 2 / view.scale, vx1 = view.x + W / 2 / view.scale;
+      const vy0 = view.y - H / 2 / view.scale, vy1 = view.y + H / 2 / view.scale;
+      ctx.fillStyle = 'rgba(19, 32, 74, 0.12)';
+      ctx.fillRect(8, 14, WORLD, WORLD);            // 桌布的投影
+      ctx.fillStyle = gingham;
       ctx.fillRect(0, 0, WORLD, WORLD);
-      ctx.strokeStyle = 'rgba(47, 111, 237, 0.08)';
+      // 花边：沿四边一圈白色小半圆
+      const SC = 24;
+      ctx.fillStyle = '#ffffff';
+      ctx.strokeStyle = 'rgba(255, 143, 179, 0.6)';
       ctx.lineWidth = 2;
-      const step = 80;
-      const x0 = Math.max(0, Math.floor((view.x - W / 2 / view.scale) / step) * step);
-      const x1 = Math.min(WORLD, view.x + W / 2 / view.scale);
-      const y0 = Math.max(0, Math.floor((view.y - H / 2 / view.scale) / step) * step);
-      const y1 = Math.min(WORLD, view.y + H / 2 / view.scale);
-      ctx.beginPath();
-      for (let x = x0; x <= x1; x += step) { ctx.moveTo(x, y0); ctx.lineTo(x, y1); }
-      for (let y = y0; y <= y1; y += step) { ctx.moveTo(x0, y); ctx.lineTo(x1, y); }
-      ctx.stroke();
-      ctx.strokeStyle = '#7aa7ff';
-      ctx.lineWidth = 6;
-      ctx.strokeRect(0, 0, WORLD, WORLD);
+      const scallop = (x, y) => {
+        if (x < vx0 - SC || x > vx1 + SC || y < vy0 - SC || y > vy1 + SC) return;
+        ctx.beginPath(); ctx.arc(x, y, SC / 2, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
+      };
+      for (let t = 0; t <= WORLD; t += SC) { scallop(t, 0); scallop(t, WORLD); scallop(0, t); scallop(WORLD, t); }
+      ctx.strokeStyle = 'rgba(255, 143, 179, 0.45)';
+      ctx.setLineDash([10, 8]);
+      ctx.lineWidth = 3;
+      ctx.strokeRect(26, 26, WORLD - 52, WORLD - 52);   // 缝线
+      ctx.setLineDash([]);
+      for (const d of decos) {
+        if (d.x < vx0 - 40 || d.x > vx1 + 40 || d.y < vy0 - 40 || d.y > vy1 + 40) continue;
+        drawDeco(d);
+      }
 
       // 小的先画，大的盖在上面
       const all = npcs.slice().sort((a, b) => a.n - b.n);
       for (const npc of all) drawPanda(npc, false);
-      if (phase !== 'over') drawPanda(player, true);
+      if (phase !== 'over') drawMe(player);
       for (const npc of all) drawTag(npc, false);
       if (phase !== 'over') drawTag(player, true);
 
@@ -367,7 +456,7 @@
     function isOpen() { return !window.__gameModal || window.__gameModal.current() === 'number'; }
     function loop(now) {
       requestAnimationFrame(loop);
-      const dt = Math.min(100, now - lastTime);
+      const dt = Math.max(0, Math.min(100, now - lastTime));
       lastTime = now;
       if (!isOpen()) { acc = 0; return; }
       acc += dt;
