@@ -241,6 +241,7 @@
       ctx.save();
       ctx.translate(BIRD_X, bird.y);
       ctx.rotate(bird.rot);
+      ctx.scale(-1, 1); // 原图朝左，左右镜像后朝右飞
       if (birdImg && birdImg.complete && birdImg.naturalWidth) {
         const s = BIRD_R * 2;
         ctx.drawImage(birdImg, -s / 2, -s / 2, s, s);
@@ -248,7 +249,7 @@
         ctx.fillStyle = '#fff';
         ctx.beginPath(); ctx.arc(0, 0, BIRD_R, 0, Math.PI * 2); ctx.fill();
         ctx.fillStyle = '#13204a';
-        ctx.beginPath(); ctx.arc(BIRD_R / 2, -BIRD_R / 3, 4, 0, Math.PI * 2); ctx.fill();
+        ctx.beginPath(); ctx.arc(-BIRD_R / 2, -BIRD_R / 3, 4, 0, Math.PI * 2); ctx.fill();
       }
       ctx.restore();
 
