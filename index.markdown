@@ -177,6 +177,22 @@ description: 点击按钮播放语音 / 浏览表情
         </span>
         <span class="game-card-best" data-best-for="flappy"></span>
       </button>
+      <button type="button" class="game-card" data-game="jump" aria-label="打开熊猫跳一跳">
+        <span class="game-card-icon" aria-hidden="true">🐾</span>
+        <span class="game-card-text">
+          <span class="game-card-name">熊猫跳一跳</span>
+          <span class="game-card-desc">按住蓄力、松开起跳，落在台子正中心有连击</span>
+        </span>
+        <span class="game-card-best" data-best-for="jump"></span>
+      </button>
+      <button type="button" class="game-card" data-game="number" aria-label="打开熊猫大胃王">
+        <span class="game-card-icon" aria-hidden="true">🍽️</span>
+        <span class="game-card-text">
+          <span class="game-card-name">熊猫大胃王</span>
+          <span class="game-card-desc">吃掉数字比你小的熊猫，躲开比你大的</span>
+        </span>
+        <span class="game-card-best" data-best-for="number"></span>
+      </button>
     </div>
   </section>
 
@@ -321,6 +337,30 @@ description: 点击按钮播放语音 / 浏览表情
           </div>
           <p class="game-tip">点击画面或按空格往上飞</p>
         </div>
+
+        <div class="game-instance" id="game-jump" data-game="jump" data-title="熊猫跳一跳" style="display:none;">
+          <div class="game-hud">
+            <span class="hud-chip"><span class="hud-label">得分</span><span class="hud-num" id="jump-score">0</span></span>
+            <span class="hud-chip"><span class="hud-label">连击</span><span class="hud-num" id="jump-combo">0</span></span>
+            <span class="hud-chip best"><span class="hud-label">最高</span><span class="hud-num" id="jump-best">0</span></span>
+          </div>
+          <div class="game-screen" style="--ratio: 400 / 600;">
+            <canvas id="jump-canvas" width="400" height="600"></canvas>
+          </div>
+          <p class="game-tip">按住画面或空格蓄力，松开起跳</p>
+        </div>
+
+        <div class="game-instance" id="game-number" data-game="number" data-title="熊猫大胃王" style="display:none;">
+          <div class="game-hud">
+            <span class="hud-chip"><span class="hud-label">我的数字</span><span class="hud-num" id="number-value">1</span></span>
+            <span class="hud-chip"><span class="hud-label">吃掉</span><span class="hud-num" id="number-eaten">0</span></span>
+            <span class="hud-chip best"><span class="hud-label">最高</span><span class="hud-num" id="number-best">0</span></span>
+          </div>
+          <div class="game-screen" style="--ratio: 400 / 600;">
+            <canvas id="number-canvas" width="400" height="600"></canvas>
+          </div>
+          <p class="game-tip">鼠标或手指指向哪里就往哪里走，也可以用方向键 / WASD</p>
+        </div>
       </div>
     </div>
   </div>
@@ -329,7 +369,7 @@ description: 点击按钮播放语音 / 浏览表情
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600&display=swap">
-<link rel="stylesheet" href="{{ '/assets/css/style.css' | relative_url }}?v=11">
+<link rel="stylesheet" href="{{ '/assets/css/style.css' | relative_url }}?v=12">
 <script>
   window.SITE_BASE = "{{ '/' | relative_url }}";
   // Cloudflare Worker 上传服务地址
@@ -337,9 +377,11 @@ description: 点击按钮播放语音 / 浏览表情
   // 表情元数据（构建时注入），用于分类管理与多分类渲染
   window.EMOTE_META = {{ site.data.emotes_meta | jsonify }};
 </script>
-<script src="{{ '/assets/js/player.js' | relative_url }}?v=11" defer></script>
-<script src="{{ '/assets/js/game-modal.js' | relative_url }}?v=11" defer></script>
-<script src="{{ '/assets/js/game-slot.js' | relative_url }}?v=11" defer></script>
-<script src="{{ '/assets/js/game-breakout.js' | relative_url }}?v=11" defer></script>
-<script src="{{ '/assets/js/game-merge.js' | relative_url }}?v=11" defer></script>
-<script src="{{ '/assets/js/game-flappy.js' | relative_url }}?v=11" defer></script>
+<script src="{{ '/assets/js/player.js' | relative_url }}?v=12" defer></script>
+<script src="{{ '/assets/js/game-modal.js' | relative_url }}?v=12" defer></script>
+<script src="{{ '/assets/js/game-slot.js' | relative_url }}?v=12" defer></script>
+<script src="{{ '/assets/js/game-breakout.js' | relative_url }}?v=12" defer></script>
+<script src="{{ '/assets/js/game-merge.js' | relative_url }}?v=12" defer></script>
+<script src="{{ '/assets/js/game-flappy.js' | relative_url }}?v=12" defer></script>
+<script src="{{ '/assets/js/game-jump.js' | relative_url }}?v=12" defer></script>
+<script src="{{ '/assets/js/game-number.js' | relative_url }}?v=12" defer></script>
