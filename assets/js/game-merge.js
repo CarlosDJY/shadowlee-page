@@ -479,7 +479,7 @@
     gameLoop(timestamp) {
       // 循环始终保持运行（只有一条），暂停 / 弹窗关闭时只是跳过物理更新
       requestAnimationFrame(this.boundLoop);
-      const dt = Math.min(100, timestamp - this.lastFrameTime);
+      const dt = Math.max(0, Math.min(100, timestamp - this.lastFrameTime));
       this.lastFrameTime = timestamp;
       if (!this.isOpen()) { this.acc = 0; return; }
       if (!this.isPaused && !this.gameOver) {

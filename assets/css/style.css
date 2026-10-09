@@ -1163,3 +1163,94 @@ body.modal-open { overflow: hidden; }
     .game-screen { width: min(100%, calc((100dvh - 170px) * (var(--ratio)))); }
     #game-slot { width: 100%; }
 }
+
+/* ---------- 熊猫跳一跳（3D） ---------- */
+.jump-skins {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    padding: 4px;
+    background: var(--game-ice);
+    border-radius: 12px;
+}
+.jump-skins button {
+    flex: 1 1 auto;
+    padding: 5px 8px;
+    font: inherit;
+    font-size: .8em;
+    font-weight: 600;
+    color: var(--text-light);
+    background: transparent;
+    border: none;
+    border-radius: 9px;
+    cursor: pointer;
+}
+.jump-skins button:hover { color: var(--game-ink); }
+.jump-skins button.active { background: #fff; color: var(--primary-dark); box-shadow: 0 1px 3px rgba(19, 32, 74, .15); }
+.jump-skins button:focus-visible { outline: 2px solid var(--primary-light); }
+
+.jump-screen {
+    position: relative;
+    background: linear-gradient(180deg, #f6f0ff 0%, #e4edff 55%, #cfdfff 100%);
+}
+.jump-overlay {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    padding-top: 22%;
+    gap: 8px;
+    background: rgba(19, 32, 74, 0.45);
+    color: #fff;
+    text-align: center;
+    pointer-events: none;
+}
+.jump-overlay[hidden] { display: none; }
+.jump-ov-title { font-family: var(--game-num); font-size: 2em; font-weight: 600; }
+.jump-ov-sub { color: #dbe6ff; }
+.jump-ov-hint { color: #aebfe6; font-size: .9em; }
+.jump-charge {
+    position: absolute;
+    left: 50%;
+    bottom: 18px;
+    width: 40%;
+    height: 8px;
+    transform: translateX(-50%);
+    background: rgba(19, 32, 74, 0.14);
+    border-radius: 4px;
+    overflow: hidden;
+    pointer-events: none;
+}
+.jump-charge[hidden] { display: none; }
+.jump-charge span {
+    display: block;
+    height: 100%;
+    width: 0;
+    background: var(--primary-color);
+    border-radius: 4px;
+}
+.jump-charge span.full { background: var(--game-pink); }
+.jump-pop-layer { position: absolute; inset: 0; pointer-events: none; overflow: hidden; }
+.jump-pop {
+    position: absolute;
+    transform: translate(-50%, -50%);
+    font-family: var(--game-num);
+    font-weight: 600;
+    font-size: 1.1em;
+    color: var(--primary-color);
+    white-space: nowrap;
+    text-shadow: 0 1px 0 #fff;
+    animation: jump-pop 1s ease-out forwards;
+}
+.jump-pop.pink { color: #e64980; font-size: 1.25em; }
+@keyframes jump-pop {
+    from { opacity: 1; transform: translate(-50%, -50%); }
+    to   { opacity: 0; transform: translate(-50%, -150%); }
+}
+@media (prefers-reduced-motion: reduce) { .jump-pop { animation-duration: .01s; } }
+.game-tip a { color: inherit; }
+#game-jump { width: min(420px, calc(100vw - 68px)); }
+#game-jump .game-screen { width: min(100%, calc((100dvh - 250px) * (var(--ratio)))); }
+@media (max-width: 520px) { #game-jump { width: 100%; } #game-jump .game-screen { width: min(100%, calc((100dvh - 215px) * (var(--ratio)))); } }

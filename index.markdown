@@ -344,10 +344,14 @@ description: 点击按钮播放语音 / 浏览表情
             <span class="hud-chip"><span class="hud-label">连击</span><span class="hud-num" id="jump-combo">0</span></span>
             <span class="hud-chip best"><span class="hud-label">最高</span><span class="hud-num" id="jump-best">0</span></span>
           </div>
-          <div class="game-screen" style="--ratio: 400 / 600;">
+          <div class="jump-skins" id="jump-skins" role="group" aria-label="选择角色"></div>
+          <div class="game-screen jump-screen" style="--ratio: 400 / 600;">
             <canvas id="jump-canvas" width="400" height="600"></canvas>
+            <div class="jump-pop-layer" id="jump-pop" aria-hidden="true"></div>
+            <div class="jump-charge" id="jump-charge" hidden><span></span></div>
+            <div class="jump-overlay" id="jump-overlay" hidden></div>
           </div>
-          <p class="game-tip">按住画面或空格蓄力，松开起跳</p>
+          <p class="game-tip">按住画面或空格蓄力，松开起跳。角色模型来自 <a href="https://github.com/shaw-core/ShadowLee_It-s-MyGO-" target="_blank" rel="noopener">ShadowLee: It's MyGO!</a></p>
         </div>
 
         <div class="game-instance" id="game-number" data-game="number" data-title="熊猫大胃王" style="display:none;">
@@ -369,7 +373,7 @@ description: 点击按钮播放语音 / 浏览表情
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600&display=swap">
-<link rel="stylesheet" href="{{ '/assets/css/style.css' | relative_url }}?v=12">
+<link rel="stylesheet" href="{{ '/assets/css/style.css' | relative_url }}?v=13">
 <script>
   window.SITE_BASE = "{{ '/' | relative_url }}";
   // Cloudflare Worker 上传服务地址
@@ -377,11 +381,11 @@ description: 点击按钮播放语音 / 浏览表情
   // 表情元数据（构建时注入），用于分类管理与多分类渲染
   window.EMOTE_META = {{ site.data.emotes_meta | jsonify }};
 </script>
-<script src="{{ '/assets/js/player.js' | relative_url }}?v=12" defer></script>
-<script src="{{ '/assets/js/game-modal.js' | relative_url }}?v=12" defer></script>
-<script src="{{ '/assets/js/game-slot.js' | relative_url }}?v=12" defer></script>
-<script src="{{ '/assets/js/game-breakout.js' | relative_url }}?v=12" defer></script>
-<script src="{{ '/assets/js/game-merge.js' | relative_url }}?v=12" defer></script>
-<script src="{{ '/assets/js/game-flappy.js' | relative_url }}?v=12" defer></script>
-<script src="{{ '/assets/js/game-jump.js' | relative_url }}?v=12" defer></script>
-<script src="{{ '/assets/js/game-number.js' | relative_url }}?v=12" defer></script>
+<script src="{{ '/assets/js/player.js' | relative_url }}?v=13" defer></script>
+<script src="{{ '/assets/js/game-modal.js' | relative_url }}?v=13" defer></script>
+<script src="{{ '/assets/js/game-slot.js' | relative_url }}?v=13" defer></script>
+<script src="{{ '/assets/js/game-breakout.js' | relative_url }}?v=13" defer></script>
+<script src="{{ '/assets/js/game-merge.js' | relative_url }}?v=13" defer></script>
+<script src="{{ '/assets/js/game-flappy.js' | relative_url }}?v=13" defer></script>
+<script type="module" src="{{ '/assets/js/game-jump.js' | relative_url }}?v=13"></script>
+<script src="{{ '/assets/js/game-number.js' | relative_url }}?v=13" defer></script>
