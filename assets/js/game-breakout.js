@@ -10,15 +10,22 @@
     if (!canvas) return;
     const ctx = canvas.getContext('2d');
     const scoreEl = document.getElementById('breakout-score');
+    const levelEl = document.getElementById('breakout-level');
+    const livesEl = document.getElementById('breakout-lives');
+    const bestEl = document.getElementById('breakout-best');
+    const GM = window.__gameModal || {};
+    const FONT = GM.FONT || 'sans-serif';
+    const setNum = (el, v) => { if (!el) return; if (GM.setNum) GM.setNum(el, v); else el.textContent = v; };
 
     const W = canvas.width, H = canvas.height;
     const PADDLE_W_BASE = 96, PADDLE_H = 16, PADDLE_Y = H - 50;
     const BALL_R = 8, BALL_SPEED_BASE = 4.4;
     const BRICK_COLS = 7, BRICK_H = 28, BRICK_GAP = 6;
-    const MARGIN_X = 16, MARGIN_TOP = 100;
+    const MARGIN_X = 16, MARGIN_TOP = 70;
     const BEST_KEY = 'breakout-best';
 
-    const colors = ['#ff5e5e', '#ff9e5e', '#ffd85e', '#5eff7a', '#5ee2ff', '#5e8cff', '#d45eff'];
+    // 砖块颜色：从樱花粉过渡到站点主题蓝
+    const colors = ['#ff8fb3', '#f59ad0', '#d6a4f0', '#aab2ff', '#7aa7ff', '#5b8cf5', '#2f6fed', '#3a5fd0', '#2e4bb0'];
 
     let state = 'ready'; // ready | playing | won | over
     let level = 1, score = 0, lives = 3, best = 0;
@@ -175,80 +182,86 @@
     }
 
     function updateScore() {
-      if (scoreEl) scoreEl.textContent = `${score}  生命：${lives}  关卡：${level}`;
+      setNum(scoreEl, score);
+      setNum(levelEl, level);
+      setNum(livesEl, lives);
+      setNum(bestEl, Math.max(best, score));
+    }
+
+    // 预先生成星空背景
+    const stars = Array.from({ length: 60 }, () => ({
+      x: Math.random() * W, y: Math.random() * H, r: Math.random() * 1.3 + 0.3, a: Math.random() * 0.5 + 0.2,
+    }));
+
+    function overlay(title, sub, hint) {
+      ctx.fillStyle = 'rgba(10, 16, 40, 0.62)';
+      ctx.fillRect(0, 0, W, H);
+      ctx.textAlign = 'center';
+      ctx.fillStyle = '#fff';
+      ctx.font = `600 34px ${FONT}`;
+      ctx.fillText(title, W / 2, H / 2 + 10);
+      if (sub) {
+        ctx.font = `500 18px ${FONT}`;
+        ctx.fillStyle = '#c9d7ff';
+        ctx.fillText(sub, W / 2, H / 2 + 44);
+      }
+      if (hint) {
+        ctx.font = `500 15px ${FONT}`;
+        ctx.fillStyle = '#8fa3cc';
+        ctx.fillText(hint, W / 2, H / 2 + 76);
+      }
     }
 
     function draw() {
-      // 背景
+      // 背景：与站点一致的深蓝夜空
       const g = ctx.createLinearGradient(0, 0, 0, H);
-      g.addColorStop(0, '#2a2320'); g.addColorStop(1, '#1a1512');
+      g.addColorStop(0, '#1b2a5c'); g.addColorStop(1, '#0d1533');
       ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
-
-      // 石墙纹理装饰线
-      ctx.strokeStyle = 'rgba(255,255,255,0.04)';
-      ctx.lineWidth = 2;
-      for (let y = 0; y < H; y += 80) {
-        ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(W, y); ctx.stroke();
+      for (const st of stars) {
+        ctx.globalAlpha = st.a;
+        ctx.fillStyle = '#fff';
+        ctx.beginPath(); ctx.arc(st.x, st.y, st.r, 0, Math.PI * 2); ctx.fill();
       }
-
-      // 关卡标题
-      ctx.fillStyle = '#fff';
-      ctx.font = 'bold 22px sans-serif';
-      ctx.textAlign = 'center';
-      ctx.fillText(`第 ${level} 关`, W / 2, 34);
-      ctx.font = '14px sans-serif';
-      ctx.fillText(brickRows() + ' 行砖块', W / 2, 56);
+      ctx.globalAlpha = 1;
 
       // 砖块
       for (const b of bricks) {
         if (b.broken) continue;
         ctx.fillStyle = b.color;
         ctx.beginPath();
-        ctx.roundRect(b.x, b.y, b.w, b.h, 6);
+        ctx.roundRect(b.x, b.y, b.w, b.h, 7);
         ctx.fill();
-        ctx.strokeStyle = 'rgba(255,255,255,0.25)';
-        ctx.lineWidth = 1;
-        ctx.stroke();
+        ctx.fillStyle = 'rgba(255,255,255,0.28)';
+        ctx.beginPath();
+        ctx.roundRect(b.x + 4, b.y + 3, b.w - 8, 5, 3);
+        ctx.fill();
       }
 
       // 挡板
-      ctx.fillStyle = '#ff6b4a';
+      ctx.fillStyle = '#fff';
       ctx.beginPath();
       ctx.roundRect(paddle.x - paddle.w / 2, PADDLE_Y - PADDLE_H / 2, paddle.w, PADDLE_H, 8);
       ctx.fill();
-      ctx.fillStyle = 'rgba(255,255,255,0.3)';
-      ctx.fillRect(paddle.x - paddle.w / 2 + 6, PADDLE_Y - PADDLE_H / 2 + 3, paddle.w - 12, 4);
+      ctx.fillStyle = '#2f6fed';
+      ctx.beginPath();
+      ctx.roundRect(paddle.x - paddle.w / 2 + 4, PADDLE_Y - PADDLE_H / 2 + 4, paddle.w - 8, PADDLE_H - 8, 4);
+      ctx.fill();
 
-      // 球
+      // 球：熊猫配色
       if (ball) {
         ctx.beginPath();
         ctx.arc(ball.x, ball.y, ball.r, 0, Math.PI * 2);
-        ctx.fillStyle = '#f8f8f8';
+        ctx.fillStyle = '#fff';
+        ctx.shadowColor = 'rgba(122, 167, 255, 0.9)';
+        ctx.shadowBlur = 12;
         ctx.fill();
-        ctx.strokeStyle = 'rgba(0,0,0,0.2)';
-        ctx.lineWidth = 1;
-        ctx.stroke();
+        ctx.shadowBlur = 0;
       }
 
-      // 开始提示
       if (state === 'ready') {
-        ctx.fillStyle = 'rgba(0,0,0,0.45)';
-        ctx.fillRect(0, 0, W, H);
-        ctx.fillStyle = '#fff';
-        ctx.font = 'bold 24px sans-serif';
-        ctx.fillText('点击开始 / 空格发球', W / 2, H / 2 - 10);
-      }
-
-      if (state === 'over') {
-        ctx.fillStyle = 'rgba(0,0,0,0.65)';
-        ctx.fillRect(0, 0, W, H);
-        ctx.fillStyle = '#fff';
-        ctx.font = 'bold 32px sans-serif';
-        ctx.fillText('游戏结束', W / 2, H / 2 - 16);
-        ctx.font = '18px sans-serif';
-        ctx.fillText(`得分：${score}   最高：${best}`, W / 2, H / 2 + 18);
-        ctx.font = '15px sans-serif';
-        ctx.fillText('点击再来一次', W / 2, H / 2 + 48);
+        overlay(`第 ${level} 关`, `${brickRows()} 行砖块`, '点击画面或按空格发球');
+      } else if (state === 'over') {
+        overlay('游戏结束', `得分 ${score}　最高 ${best}`, '点击画面再来一局');
       }
     }
 
