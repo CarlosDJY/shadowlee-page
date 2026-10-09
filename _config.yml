@@ -1,7 +1,7 @@
 title: "shadowLee - 语音按钮网站"
 description: "点击按钮播放语音"
-url: "https://lu-91015.github.io"
-baseurl: "/shadowlee.github.io"
+url: "https://carlosdjy.github.io"
+baseurl: "/shadowlee-page"
 
 # 构建设置
 markdown: kramdown
