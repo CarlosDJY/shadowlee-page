@@ -36,6 +36,7 @@
     let isSpinning = false;
     let won = false;
     let reels = [];
+    let round = 0; // 每次重开 +1，用来作废还在转的上一局
 
     function buildReels() {
       const count = MODES[mode].reels;
@@ -59,6 +60,8 @@
     }
 
     function resetGame() {
+      round++;
+      isSpinning = false;
       score = START_SCORE;
       won = false;
       updateScoreDisplay();
@@ -94,8 +97,9 @@
       return { change, msg };
     }
 
-    async function spinReel(el, ticks) {
+    async function spinReel(el, ticks, myRound) {
       for (let i = 0; i < ticks; i++) {
+        if (myRound !== round) return null;
         el.src = symbolSrc(rand(all));
         await sleep(65);
       }
@@ -112,6 +116,7 @@
       }
 
       isSpinning = true;
+      const myRound = round;
       resultEl.textContent = `-${MODES[mode].baseBet} 底注…`;
       spinBtn.disabled = true;
 
@@ -119,7 +124,9 @@
       const ticks = Array.from({ length: cfg.reels }, (_, i) => 12 + i * 4);
       const results = [];
       for (let i = 0; i < cfg.reels; i++) {
-        results.push(await spinReel(reels[i], ticks[i]));
+        const r = await spinReel(reels[i], ticks[i], myRound);
+        if (myRound !== round) return; // 转动途中重开 / 关闭了，丢弃这次结果
+        results.push(r);
       }
 
       const outcome = calcOutcome(results);
@@ -151,7 +158,7 @@
     updateScoreDisplay();
 
     window.__gameHooks.slot = (action) => {
-      if (action === 'open') resetGame();
+      if (action === 'open' || action === 'close') resetGame();
     };
   });
 })();

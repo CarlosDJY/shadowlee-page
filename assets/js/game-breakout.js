@@ -75,6 +75,7 @@
       ball = {
         x: paddle.x,
         y: PADDLE_Y - BALL_R - 4,
+        r: BALL_R,
         vx: 0,
         vy: 0,
         speed: BALL_SPEED_BASE + level * 0.35,
@@ -127,9 +128,10 @@
       if (ball.y - ball.r <= 0) { ball.y = ball.r; ball.vy *= -1; }
 
       // 挡板
-      if (ball.y + ball.r >= PADDLE_Y - PADDLE_H / 2 && ball.y - ball.r <= PADDLE_Y + PADDLE_H / 2
-          && ball.x >= paddle.x - paddle.w / 2 && ball.x <= paddle.x + paddle.w / 2) {
-        const t = (ball.x - (paddle.x - paddle.w / 2)) / paddle.w; // 0..1
+      if (ball.vy > 0
+          && ball.y + ball.r >= PADDLE_Y - PADDLE_H / 2 && ball.y - ball.r <= PADDLE_Y + PADDLE_H / 2
+          && ball.x + ball.r >= paddle.x - paddle.w / 2 && ball.x - ball.r <= paddle.x + paddle.w / 2) {
+        const t = clamp((ball.x - (paddle.x - paddle.w / 2)) / paddle.w, 0, 1); // 0..1
         const angle = -Math.PI * 0.85 + t * Math.PI * 0.7; // 范围约 150°
         ball.vx = Math.cos(angle) * ball.speed;
         ball.vy = Math.sin(angle) * ball.speed;
@@ -159,6 +161,7 @@
           resetBall();
           state = 'ready';
         }
+        return;
       }
 
       // 过关
@@ -249,11 +252,19 @@
       }
     }
 
-    function loop() {
-      update();
+    // 固定 60Hz 逻辑步长：高刷屏（120/144Hz）下速度不再变快
+    const STEP = 1000 / 60;
+    let lastTime = performance.now(), acc = 0;
+    function isOpen() { return !window.__gameModal || window.__gameModal.current() === 'breakout'; }
+    function loop(now) {
+      rafId = requestAnimationFrame(loop);
+      const dt = Math.min(100, now - lastTime);
+      lastTime = now;
+      if (!isOpen()) { acc = 0; return; }
+      acc += dt;
+      while (acc >= STEP) { update(); acc -= STEP; }
       draw();
       updateScore();
-      rafId = requestAnimationFrame(loop);
     }
 
     function movePaddle(clientX) {
@@ -273,6 +284,7 @@
     }, { passive: false });
     canvas.addEventListener('click', onStartBtn);
     window.addEventListener('keydown', e => {
+      if (window.__gameModal && !window.__gameModal.wantsKeys('breakout', e)) return;
       if (e.key === ' ' || e.key === 'Enter') {
         e.preventDefault();
         onStartBtn();
@@ -291,11 +303,12 @@
     readBest();
     resetGame();
     updateScore();
-    loop();
+    rafId = requestAnimationFrame(loop);
 
     if (window.__gameHooks) {
       window.__gameHooks.breakout = (action) => {
         if (action === 'open') resetGame();
+        if (action === 'close' && state === 'playing') { saveBest(); }
       };
     }
   });

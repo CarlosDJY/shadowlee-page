@@ -26,6 +26,7 @@
       const meta = window.EMOTE_META || { items: [] };
       const items = [];
       const all = meta.items.filter(i => i.file);
+      if (!all.length) all.push({ file: '', name: '' });
       for (let i = 0; i < 11; i++) {
         items.push(all[i % all.length]);
       }
@@ -41,7 +42,12 @@
       this.nextFruit = null;
       this.nextFruitX = this.canvas.width / 2;
       this.score = 0;
-      this.highScore = parseInt(localStorage.getItem('panda_merge_high_score') || '0', 10);
+      try {
+        this.highScore = parseInt(localStorage.getItem('panda_merge_high_score') || '0', 10) || 0;
+      } catch (e) { this.highScore = 0; }
+      this.lastDropTime = 0;
+      this.DROP_COOLDOWN = 450;   // 两次掉落之间的最短间隔（毫秒）
+      this.OVER_FRAMES = 90;      // 球在危险线上方停留约 1.5 秒才判负
       this.gameOver = false;
       this.mergeEffects = [];
       this.lastFrameTime = 0;
@@ -60,8 +66,11 @@
       this.setupEventListeners();
       this.init();
 
+      this.STEP = 1000 / 60;      // 固定 60Hz 物理步长，高刷屏下速度不变
+      this.acc = 0;
       this.lastFrameTime = performance.now();
-      requestAnimationFrame(this.gameLoop.bind(this));
+      this.boundLoop = this.gameLoop.bind(this);
+      requestAnimationFrame(this.boundLoop);
       gameLogger.info('游戏初始化完成');
     }
 
@@ -123,12 +132,14 @@
       });
 
       window.addEventListener('keydown', (e) => {
+        if (window.__gameModal && !window.__gameModal.wantsKeys('merge', e)) return;
         if (e.key === 'p' || e.key === 'P') {
           this.togglePause();
         }
       });
 
       window.addEventListener('blur', () => {
+        if (!this.isOpen()) return;
         if (!this.gameOver && !this.isPaused) {
           this.togglePause();
         }
@@ -158,8 +169,15 @@
       };
     }
 
+    isOpen() {
+      return !window.__gameModal || window.__gameModal.current() === 'merge';
+    }
+
     dropFruit() {
       if (this.gameOver || !this.nextFruit || this.isPaused) return;
+      const now = performance.now();
+      if (now - this.lastDropTime < this.DROP_COOLDOWN) return;
+      this.lastDropTime = now;
       this.fruits.push({
         type: this.nextFruit.type,
         x: this.nextFruit.x,
@@ -173,14 +191,9 @@
     }
 
     togglePause() {
+      if (this.gameOver) return;
       this.isPaused = !this.isPaused;
-      if (this.isPaused) {
-        gameLogger.info('游戏暂停');
-      } else {
-        gameLogger.info('游戏继续');
-        this.lastFrameTime = performance.now();
-        requestAnimationFrame(this.gameLoop.bind(this));
-      }
+      gameLogger.info(this.isPaused ? '游戏暂停' : '游戏继续');
     }
 
     update(deltaTime) {
@@ -276,17 +289,23 @@
 
       this.fruits = this.fruits.filter(fruit => !fruit.toRemove);
 
+      // 球顶超过危险线并持续一段时间才判负（避免弹跳瞬间误判）
       const gameOverThreshold = this.dropZoneHeight;
+      this.danger = 0;
       for (const fruit of this.fruits) {
-        if (fruit.y - fruit.radius < gameOverThreshold && Math.abs(fruit.vy) < 0.2) {
-          if (!this.gameOver) {
-            this.gameOver = true;
-            if (this.score > this.highScore) {
-              this.highScore = this.score;
-              localStorage.setItem('panda_merge_high_score', this.highScore.toString());
-            }
-            gameLogger.warning('游戏结束');
+        if (fruit.y - fruit.radius < gameOverThreshold) {
+          fruit.overFrames = (fruit.overFrames || 0) + 1;
+        } else {
+          fruit.overFrames = 0;
+        }
+        this.danger = Math.max(this.danger, fruit.overFrames / this.OVER_FRAMES);
+        if (fruit.overFrames > this.OVER_FRAMES && !this.gameOver) {
+          this.gameOver = true;
+          if (this.score > this.highScore) {
+            this.highScore = this.score;
+            try { localStorage.setItem('panda_merge_high_score', this.highScore.toString()); } catch (e) {}
           }
+          gameLogger.warning('游戏结束');
           break;
         }
       }
@@ -416,17 +435,18 @@
     }
 
     gameLoop(timestamp) {
-      if (this.isPaused) {
-        this.draw();
-        return;
-      }
-      const deltaTime = timestamp - this.lastFrameTime;
+      // 循环始终保持运行（只有一条），暂停 / 弹窗关闭时只是跳过物理更新
+      requestAnimationFrame(this.boundLoop);
+      const dt = Math.min(100, timestamp - this.lastFrameTime);
       this.lastFrameTime = timestamp;
-      if (!this.gameOver) {
-        this.update(deltaTime);
+      if (!this.isOpen()) { this.acc = 0; return; }
+      if (!this.isPaused && !this.gameOver) {
+        this.acc += dt;
+        while (this.acc >= this.STEP) { this.update(this.STEP); this.acc -= this.STEP; }
+      } else {
+        this.acc = 0;
       }
       this.draw();
-      requestAnimationFrame(this.gameLoop.bind(this));
     }
   }
 

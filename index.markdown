@@ -284,7 +284,7 @@ description: 点击按钮播放语音 / 浏览表情
   </div>
 
 
-<link rel="stylesheet" href="{{ '/assets/css/style.css' | relative_url }}?v=5">
+<link rel="stylesheet" href="{{ '/assets/css/style.css' | relative_url }}?v=6">
 <script>
   window.SITE_BASE = "{{ '/' | relative_url }}";
   // Cloudflare Worker 上传服务地址
@@ -292,9 +292,9 @@ description: 点击按钮播放语音 / 浏览表情
   // 表情元数据（构建时注入），用于分类管理与多分类渲染
   window.EMOTE_META = {{ site.data.emotes_meta | jsonify }};
 </script>
-<script src="{{ '/assets/js/player.js' | relative_url }}?v=5" defer></script>
-<script src="{{ '/assets/js/game-modal.js' | relative_url }}?v=5" defer></script>
-<script src="{{ '/assets/js/game-slot.js' | relative_url }}?v=5" defer></script>
-<script src="{{ '/assets/js/game-breakout.js' | relative_url }}?v=5" defer></script>
-<script src="{{ '/assets/js/game-merge.js' | relative_url }}?v=5" defer></script>
-<script src="{{ '/assets/js/game-flappy.js' | relative_url }}?v=5" defer></script>
+<script src="{{ '/assets/js/player.js' | relative_url }}?v=6" defer></script>
+<script src="{{ '/assets/js/game-modal.js' | relative_url }}?v=6" defer></script>
+<script src="{{ '/assets/js/game-slot.js' | relative_url }}?v=6" defer></script>
+<script src="{{ '/assets/js/game-breakout.js' | relative_url }}?v=6" defer></script>
+<script src="{{ '/assets/js/game-merge.js' | relative_url }}?v=6" defer></script>
+<script src="{{ '/assets/js/game-flappy.js' | relative_url }}?v=6" defer></script>

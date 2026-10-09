@@ -32,14 +32,17 @@
     const PIPE_SPEED_BASE = 2.0;
     const PIPE_INTERVAL_BASE = 115; // 管道间隔更大
 
-    let bird, pipes, score, best, frame, running, gameOver, rafId;
-    best = parseInt(localStorage.getItem('flappy_best') || '0', 10);
+    const HIT_R = BIRD_R * 0.78; // 碰撞半径略小于图片，表情图四周有留白
+
+    let bird, pipes, score, best, frame, running, gameOver, rafId, nextPipeIn;
+    try { best = parseInt(localStorage.getItem('flappy_best') || '0', 10) || 0; } catch (e) { best = 0; }
 
     function reset() {
       bird = { y: H / 2, vy: 0, rot: 0 };
       pipes = [];
       score = 0;
       frame = 0;
+      nextPipeIn = 60; // 开局约 1 秒后出第一根管道
       running = true;
       gameOver = false;
     }
@@ -81,7 +84,8 @@
       bird.rot = Math.max(-0.5, Math.min(1.2, bird.vy / 12));
 
       const d = difficulty();
-      if (frame % Math.round(d.interval) === 0) spawnPipe();
+      // 用倒计时生成管道：间隔随难度变化时不会出现两根管道挤在一起
+      if (--nextPipeIn <= 0) { spawnPipe(); nextPipeIn = Math.round(d.interval); }
 
       for (const p of pipes) {
         p.x -= d.speed;
@@ -91,14 +95,14 @@
           score++;
         }
         // 碰撞
-        const hitTop = rectHit(BIRD_X, bird.y, BIRD_R, p.x, 0, PIPE_W, p.gapTop);
-        const hitBottom = rectHit(BIRD_X, bird.y, BIRD_R, p.x, p.gapTop + p.gap, PIPE_W, H - GROUND_H - (p.gapTop + p.gap));
+        const hitTop = rectHit(BIRD_X, bird.y, HIT_R, p.x, 0, PIPE_W, p.gapTop);
+        const hitBottom = rectHit(BIRD_X, bird.y, HIT_R, p.x, p.gapTop + p.gap, PIPE_W, H - GROUND_H - (p.gapTop + p.gap));
         if (hitTop || hitBottom) die();
       }
       pipes = pipes.filter(p => p.x + PIPE_W > -10);
 
       // 地面 / 天花板
-      if (bird.y + BIRD_R >= H - GROUND_H) { bird.y = H - GROUND_H - BIRD_R; die(); }
+      if (bird.y + HIT_R >= H - GROUND_H) { bird.y = H - GROUND_H - HIT_R; die(); }
       if (bird.y - BIRD_R <= 0) { bird.y = BIRD_R; bird.vy = 0; }
     }
 
@@ -106,7 +110,7 @@
       if (gameOver) return;
       gameOver = true;
       running = false;
-      if (score > best) { best = score; localStorage.setItem('flappy_best', String(best)); }
+      if (score > best) { best = score; try { localStorage.setItem('flappy_best', String(best)); } catch (e) {} }
     }
 
     function draw() {
@@ -176,10 +180,18 @@
       }
     }
 
-    function loop() {
-      update();
-      draw();
+    // 固定 60Hz 逻辑步长：高刷屏下速度不再变快
+    const STEP = 1000 / 60;
+    let lastTime = performance.now(), acc = 0;
+    function isOpen() { return !window.__gameModal || window.__gameModal.current() === 'flappy'; }
+    function loop(now) {
       rafId = requestAnimationFrame(loop);
+      const dt = Math.min(100, now - lastTime);
+      lastTime = now;
+      if (!isOpen()) { acc = 0; return; }
+      acc += dt;
+      while (acc >= STEP) { update(); acc -= STEP; }
+      draw();
     }
 
     canvas.addEventListener('click', () => {
@@ -187,6 +199,7 @@
       jump();
     });
     window.addEventListener('keydown', (e) => {
+      if (window.__gameModal && !window.__gameModal.wantsKeys('flappy', e)) return;
       if (e.key === ' ' || e.key === 'ArrowUp') {
         e.preventDefault();
         if (!running && !gameOver) reset();
@@ -196,11 +209,12 @@
 
     reset();
     running = false; // 等待第一次点击开始
-    loop();
+    rafId = requestAnimationFrame(loop);
 
     if (window.__gameHooks) {
       window.__gameHooks.flappy = (action) => {
-        if (action === 'open') { reset(); running = false; }
+        if (action === 'close' && running && !gameOver) die(); // 中途关闭也记录最高分
+        if (action === 'open' || action === 'close') { reset(); running = false; }
       };
     }
   });
