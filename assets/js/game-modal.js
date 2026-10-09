@@ -32,7 +32,7 @@
     set('flappy', best(readNum('flappy_best')));
     set('jump', best(readNum('jump_best')));
     const nb = readNum('number_best');
-    set('number', nb > 1 ? `最大长到<b>${nb}</b>` : '');
+    set('number', nb >= 22966160 ? `已通关<b>22966160</b>` : nb > 3 ? `最大长到<b>${nb}</b>` : '');
     const clears = readSlotClears().filter(m => SLOT_NAMES[m]);
     set('slot', clears.length ? `已通关<b>${clears.map(m => SLOT_NAMES[m]).join(' / ')}</b>` : '');
   }

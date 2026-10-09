@@ -189,7 +189,7 @@ description: 点击按钮播放语音 / 浏览表情
         <span class="game-card-icon" aria-hidden="true">🍽️</span>
         <span class="game-card-text">
           <span class="game-card-name">熊猫大胃王</span>
-          <span class="game-card-desc">吃掉数字比你小的熊猫，躲开比你大的</span>
+          <span class="game-card-desc">吃掉数字比你小的熊猫，长到 22966160 就赢</span>
         </span>
         <span class="game-card-best" data-best-for="number"></span>
       </button>
@@ -382,10 +382,10 @@ description: 点击按钮播放语音 / 浏览表情
   window.EMOTE_META = {{ site.data.emotes_meta | jsonify }};
 </script>
 <script src="{{ '/assets/js/player.js' | relative_url }}?v=13" defer></script>
-<script src="{{ '/assets/js/game-modal.js' | relative_url }}?v=13" defer></script>
+<script src="{{ '/assets/js/game-modal.js' | relative_url }}?v=15" defer></script>
 <script src="{{ '/assets/js/game-slot.js' | relative_url }}?v=13" defer></script>
 <script src="{{ '/assets/js/game-breakout.js' | relative_url }}?v=13" defer></script>
 <script src="{{ '/assets/js/game-merge.js' | relative_url }}?v=13" defer></script>
 <script src="{{ '/assets/js/game-flappy.js' | relative_url }}?v=13" defer></script>
 <script type="module" src="{{ '/assets/js/game-jump.js' | relative_url }}?v=13"></script>
-<script src="{{ '/assets/js/game-number.js' | relative_url }}?v=13" defer></script>
+<script src="{{ '/assets/js/game-number.js' | relative_url }}?v=15" defer></script>
