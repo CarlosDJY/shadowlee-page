@@ -329,7 +329,7 @@ description: 点击按钮播放语音 / 浏览表情
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600&display=swap">
-<link rel="stylesheet" href="{{ '/assets/css/style.css' | relative_url }}?v=10">
+<link rel="stylesheet" href="{{ '/assets/css/style.css' | relative_url }}?v=11">
 <script>
   window.SITE_BASE = "{{ '/' | relative_url }}";
   // Cloudflare Worker 上传服务地址
@@ -337,9 +337,9 @@ description: 点击按钮播放语音 / 浏览表情
   // 表情元数据（构建时注入），用于分类管理与多分类渲染
   window.EMOTE_META = {{ site.data.emotes_meta | jsonify }};
 </script>
-<script src="{{ '/assets/js/player.js' | relative_url }}?v=10" defer></script>
-<script src="{{ '/assets/js/game-modal.js' | relative_url }}?v=10" defer></script>
-<script src="{{ '/assets/js/game-slot.js' | relative_url }}?v=10" defer></script>
-<script src="{{ '/assets/js/game-breakout.js' | relative_url }}?v=10" defer></script>
-<script src="{{ '/assets/js/game-merge.js' | relative_url }}?v=10" defer></script>
-<script src="{{ '/assets/js/game-flappy.js' | relative_url }}?v=10" defer></script>
+<script src="{{ '/assets/js/player.js' | relative_url }}?v=11" defer></script>
+<script src="{{ '/assets/js/game-modal.js' | relative_url }}?v=11" defer></script>
+<script src="{{ '/assets/js/game-slot.js' | relative_url }}?v=11" defer></script>
+<script src="{{ '/assets/js/game-breakout.js' | relative_url }}?v=11" defer></script>
+<script src="{{ '/assets/js/game-merge.js' | relative_url }}?v=11" defer></script>
+<script src="{{ '/assets/js/game-flappy.js' | relative_url }}?v=11" defer></script>

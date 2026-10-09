@@ -32,6 +32,9 @@
     const BIRD_R = 32; // 比原来更大
     const GRAVITY = 0.35;
     const JUMP = -6.5;
+    const MAX_FALL = 7.5;        // 最大下坠速度，避免越掉越快来不及反应
+    const EASE_FRAMES = 180;     // 开局约 3 秒内重力从 40% 慢慢加到 100%（第一根竹子差不多这时到）
+    const EASE_START = 0.4;
     const PIPE_W = 60;
     const GAP_BASE = 190; // 初始缺口更大，更简单
     const PIPE_SPEED_BASE = 2.0;
@@ -86,7 +89,8 @@
     function update() {
       if (!running || gameOver) return;
       frame++;
-      bird.vy += GRAVITY;
+      const ease = Math.min(1, EASE_START + (1 - EASE_START) * (frame / EASE_FRAMES));
+      bird.vy = Math.min(MAX_FALL, bird.vy + GRAVITY * ease);
       bird.y += bird.vy;
       bird.rot = Math.max(-0.5, Math.min(1.2, bird.vy / 12));
 
