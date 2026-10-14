@@ -661,3 +661,9 @@ items:
     name: "香"
     categories:
       - "熊猫"
+  - file: "受伤李.jpg"
+    name: "受伤李"
+    categories: []
+  - file: "笑死_1791983994598_1.png"
+    name: "笑死"
+    categories: []
