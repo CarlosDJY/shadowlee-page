@@ -3,13 +3,13 @@
  *  - 李豆沙在直播，观众自己涌进来产生「人气」；点直播画面 = 打 call，手动加速
  *  - 用人气买设备（应援熊猫、麦克风、补光灯……），每种设备攒到 25 / 50 / 100… 个时产出翻倍
  *  - 「粉丝」只涨不掉，人气越高涨得越快；粉丝够了、人气攒够了就能开「新衣回」
- *  - 新衣回：揭幕动画 + 60 秒限时直播（人气 ×3、礼物雨），解锁下一套皮套，不清零任何进度
- *  - 每套皮套有一个特长，衣柜里可以随时换着穿；10 套按出道顺序解锁，集齐后还有隐藏的魔法熊猫
+ *  - 新衣回：揭幕动画 + 60 秒限时直播（人气 ×3、礼物雨），解锁下一套衣服，不清零任何进度
+ *  - 每套衣服有一个特长，衣柜里可以随时换着穿；10 套按出道顺序解锁，集齐后还有隐藏的魔法熊猫
  *  - 关掉网页也会继续直播（离线收益按 50% 算，最多 8 小时）
  *
  * 下面 CONFIG 是纯 JSON，数值模拟器（idle_sim.py）直接读取同一份，用来核对理论用时：
  * 每天上线 2 次 × 20 分钟约 5.5 天集齐；一直在线积极玩约 33 小时。
- * 皮套立绘来自李豆沙本人 B 站动态（opus 1157213040286892036），缩成 540×960 webp 放在 assets/images/outfits/。
+ * 衣服立绘来自李豆沙本人 B 站动态（opus 1157213040286892036），缩成 540×960 webp 放在 assets/images/outfits/。
  */
 (function () {
 'use strict';
@@ -340,7 +340,7 @@ window.addEventListener('load', () => {
   function giftInterval() { return CONFIG.gift.interval / (perk().type === 'gift' ? 1.6 : 1); }
   function giftValue() { return CONFIG.gift.seconds * pps(false) * (perk().type === 'gift' ? perk().v : 1); }
   function outfitFile(i) { return OUTFIT_DIR + (i === -1 ? CONFIG.secret.file : CONFIG.outfits[i].file); }
-  function outfitName(i) { return i === -1 ? '隐藏皮套 · 魔法熊猫' : `第 ${i + 1} 套皮套`; }
+  function outfitName(i) { return i === -1 ? '隐藏衣服 · 魔法熊猫' : `第 ${i + 1} 套衣服`; }
   function perkText(i) { return i === -1 ? CONFIG.secret.perkText : CONFIG.outfits[i].perkText; }
 
   // ---------------------------- 音效 / 语音 ----------------------------
@@ -640,7 +640,7 @@ window.addEventListener('load', () => {
     // 新衣回进度
     const g = nextGate();
     if (!g) {
-      el.gate.innerHTML = `<div class="idle-gate-done">11 套皮套全部集齐！🎉</div>`;
+      el.gate.innerHTML = `<div class="idle-gate-done">11 套衣服全部集齐！🎉</div>`;
     } else {
       const fOK = S.fans >= g.fans, cOK = S.P >= g.cost;
       const fp = Math.min(1, S.fans / g.fans), cp = Math.min(1, S.P / g.cost);

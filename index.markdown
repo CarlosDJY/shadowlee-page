@@ -149,7 +149,7 @@ description: 点击按钮播放语音 / 浏览表情
         <span class="game-card-icon" aria-hidden="true">📺</span>
         <span class="game-card-text">
           <span class="game-card-name">李豆沙的直播间</span>
-          <span class="game-card-desc">放置挂机攒人气、涨粉丝，开新衣回集齐全部皮套</span>
+          <span class="game-card-desc">放置挂机攒人气、涨粉丝，开新衣回集齐全部衣服</span>
         </span>
         <span class="game-card-best" data-best-for="idle"></span>
       </button>
@@ -299,7 +299,7 @@ description: 点击按钮播放语音 / 浏览表情
             <button type="button" class="hud-btn" id="idle-mute" aria-label="关闭声音" aria-pressed="false">🔊</button>
           </div>
           <div class="idle-stage" id="idle-stage" role="button" aria-label="给豆沙打 call">
-            <img class="idle-outfit" id="idle-outfit" alt="当前皮套">
+            <img class="idle-outfit" id="idle-outfit" alt="当前衣服">
             <div class="idle-live"><span class="idle-live-dot"></span>LIVE <span id="idle-viewers">1 人在看</span></div>
             <div class="idle-danmaku" id="idle-danmaku" aria-hidden="true"></div>
             <div class="idle-fx" id="idle-fx"></div>
@@ -443,7 +443,7 @@ description: 点击按钮播放语音 / 浏览表情
   window.EMOTE_META = {{ site.data.emotes_meta | jsonify }};
 </script>
 <script src="{{ '/assets/js/player.js' | relative_url }}?v=13" defer></script>
-<script src="{{ '/assets/js/game-modal.js' | relative_url }}?v=17" defer></script>
+<script src="{{ '/assets/js/game-modal.js' | relative_url }}?v=18" defer></script>
 <script src="{{ '/assets/js/game-slot.js' | relative_url }}?v=13" defer></script>
 <script src="{{ '/assets/js/game-breakout.js' | relative_url }}?v=14" defer></script>
 <script src="{{ '/assets/js/game-merge.js' | relative_url }}?v=15" defer></script>
@@ -451,4 +451,4 @@ description: 点击按钮播放语音 / 浏览表情
 <script type="module" src="{{ '/assets/js/game-jump.js' | relative_url }}?v=14"></script>
 <script src="{{ '/assets/js/game-number.js' | relative_url }}?v=17" defer></script>
 <script src="{{ '/assets/js/game-bamboo.js' | relative_url }}?v=2" defer></script>
-<script src="{{ '/assets/js/game-idle.js' | relative_url }}?v=1" defer></script>
+<script src="{{ '/assets/js/game-idle.js' | relative_url }}?v=2" defer></script>
