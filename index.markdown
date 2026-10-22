@@ -145,6 +145,14 @@ description: 点击按钮播放语音 / 浏览表情
   <!-- 游戏面板 -->
   <section id="games-panel" class="tab-panel">
     <div class="games-grid">
+      <button type="button" class="game-card" data-game="idle" aria-label="打开李豆沙的直播间">
+        <span class="game-card-icon" aria-hidden="true">📺</span>
+        <span class="game-card-text">
+          <span class="game-card-name">李豆沙的直播间</span>
+          <span class="game-card-desc">放置挂机攒人气、涨粉丝，开新衣回集齐全部皮套</span>
+        </span>
+        <span class="game-card-best" data-best-for="idle"></span>
+      </button>
       <button type="button" class="game-card" data-game="slot" aria-label="打开熊猫老虎机">
         <span class="game-card-icon" aria-hidden="true">🎰</span>
         <span class="game-card-text">
@@ -283,6 +291,38 @@ description: 点击按钮播放语音 / 浏览表情
       </header>
       <div class="game-modal-body" id="game-modal-body">
 
+        <div class="game-instance" id="game-idle" data-game="idle" data-title="李豆沙的直播间" style="display:none;">
+          <div class="game-hud">
+            <span class="hud-chip"><span class="hud-label">人气</span><span class="hud-num" id="idle-pop">0</span></span>
+            <span class="hud-chip"><span class="hud-num idle-rate" id="idle-pps">0/秒</span></span>
+            <span class="hud-chip best"><span class="hud-label">粉丝</span><span class="hud-num" id="idle-fans">0</span></span>
+            <button type="button" class="hud-btn" id="idle-mute" aria-label="关闭声音" aria-pressed="false">🔊</button>
+          </div>
+          <div class="idle-stage" id="idle-stage" role="button" aria-label="给豆沙打 call">
+            <img class="idle-outfit" id="idle-outfit" alt="当前皮套">
+            <div class="idle-live"><span class="idle-live-dot"></span>LIVE <span id="idle-viewers">1 人在看</span></div>
+            <div class="idle-danmaku" id="idle-danmaku" aria-hidden="true"></div>
+            <div class="idle-fx" id="idle-fx"></div>
+            <div class="idle-event" id="idle-event" hidden><i></i><span></span></div>
+            <div class="idle-reveal" id="idle-reveal" hidden></div>
+            <div class="idle-toast" id="idle-toast" role="status" aria-live="polite"></div>
+          </div>
+          <div class="idle-gate" id="idle-gate"></div>
+          <div class="idle-tabs" role="tablist">
+            <button type="button" class="idle-tab active" data-tab="gen" role="tab" aria-selected="true">设备</button>
+            <button type="button" class="idle-tab" data-tab="wardrobe" role="tab" aria-selected="false">衣柜</button>
+          </div>
+          <div class="idle-gen-panel">
+            <div class="idle-modes" role="group" aria-label="一次买几个">
+              <button type="button" class="idle-mode active" data-mode="1">×1</button>
+              <button type="button" class="idle-mode" data-mode="10">×10</button>
+              <button type="button" class="idle-mode" data-mode="max">最多</button>
+            </div>
+            <div class="idle-list" id="idle-list"></div>
+          </div>
+          <div class="idle-wardrobe" id="idle-wardrobe" hidden></div>
+        </div>
+
         <div class="game-instance" id="game-slot" data-game="slot" data-title="熊猫老虎机" style="display:none;">
           <div class="game-hud">
             <span class="hud-chip"><span class="hud-label">得分</span><span class="hud-num" id="slot-score">500</span></span>
@@ -394,7 +434,7 @@ description: 点击按钮播放语音 / 浏览表情
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600&display=swap">
-<link rel="stylesheet" href="{{ '/assets/css/style.css' | relative_url }}?v=14">
+<link rel="stylesheet" href="{{ '/assets/css/style.css' | relative_url }}?v=15">
 <script>
   window.SITE_BASE = "{{ '/' | relative_url }}";
   // Cloudflare Worker 上传服务地址
@@ -403,7 +443,7 @@ description: 点击按钮播放语音 / 浏览表情
   window.EMOTE_META = {{ site.data.emotes_meta | jsonify }};
 </script>
 <script src="{{ '/assets/js/player.js' | relative_url }}?v=13" defer></script>
-<script src="{{ '/assets/js/game-modal.js' | relative_url }}?v=16" defer></script>
+<script src="{{ '/assets/js/game-modal.js' | relative_url }}?v=17" defer></script>
 <script src="{{ '/assets/js/game-slot.js' | relative_url }}?v=13" defer></script>
 <script src="{{ '/assets/js/game-breakout.js' | relative_url }}?v=14" defer></script>
 <script src="{{ '/assets/js/game-merge.js' | relative_url }}?v=15" defer></script>
@@ -411,3 +451,4 @@ description: 点击按钮播放语音 / 浏览表情
 <script type="module" src="{{ '/assets/js/game-jump.js' | relative_url }}?v=14"></script>
 <script src="{{ '/assets/js/game-number.js' | relative_url }}?v=17" defer></script>
 <script src="{{ '/assets/js/game-bamboo.js' | relative_url }}?v=2" defer></script>
+<script src="{{ '/assets/js/game-idle.js' | relative_url }}?v=1" defer></script>
