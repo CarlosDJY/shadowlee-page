@@ -116,6 +116,7 @@
     let phase, score, timeLeft, elapsed, scroll, speed, combo, comboT, hitStop, shake, invuln;
     let panda, bugs, clocks, particles, popups, ghosts, leaves, nextBugIn, nextClockIn, lastTick, flash;
     let queued = 0;   // 输入缓冲：跳跃途中按的方向，落地后立刻执行
+    let landGrace = 0; // 刚落地的几帧不判被撞
 
     function reset() {
       phase = 'ready';
@@ -125,6 +126,7 @@
       bugs = []; clocks = []; particles = []; popups = []; ghosts = [];
       nextBugIn = 50; nextClockIn = 60 * 9; lastTick = START_TIME;
       queued = 0;
+      landGrace = 0;
       leaves = Array.from({ length: 14 }, () => newLeaf(true));
       updateHud();
     }
@@ -280,6 +282,7 @@
       speed = Math.min(5.2, 2.0 + elapsed / 60 * 0.045);
       scroll += speed;
       if (invuln > 0) invuln--;
+      if (landGrace > 0) landGrace--;
       if (comboT > 0 && --comboT === 0) combo = 0;
 
       // 最后 5 秒每秒滴答一声
@@ -295,14 +298,23 @@
         panda.y = PY - Math.sin(Math.PI * k) * 34;
         panda.rot = Math.sin(Math.PI * k) * 0.5 * panda.dir;
         if (elapsed % 2 === 0) ghosts.push({ x: panda.x, y: panda.y, rot: panda.rot, life: 0.6 });
+        // 宽容：跳跃最后几帧里，目标竹子上的瓢虫已经撞到熊猫身上了，算“撞飞”而不是等落地再判
+        if (panda.jumpT <= 4) {
+          for (const b of bugs) {
+            if (!b.dead && b.kind !== 'beetle' && b.lane === panda.lane && Math.abs(b.y - PY) <= 50) smash(b);
+          }
+        }
         if (panda.jumpT === 0) {
           panda.x = LANES[panda.lane]; panda.y = PY; panda.rot = 0;
           panda.sx = 1.25; panda.sy = 0.8;   // 落地压扁
-          // 落地：正好落在瓢虫身上就撞飞它；落在甲虫身上就受伤
+          // 落地：落在瓢虫身上就撞飞（判定放宽到 ±50）；落在甲虫身上才受伤（判定收紧到 ±28）
           for (const b of bugs) {
-            if (b.dead || b.lane !== panda.lane || Math.abs(b.y - PY) > 44) continue;
-            if (b.kind === 'beetle') hurt(); else smash(b);
+            if (b.dead || b.lane !== panda.lane) continue;
+            const dy = Math.abs(b.y - PY);
+            if (b.kind === 'beetle') { if (dy <= 28) hurt(); }
+            else if (dy <= 50) smash(b);
           }
+          landGrace = 4;
           burst(panda.x, PY + 18, 5, ['#9be08f', '#cdeec0', '#ffffff'], 0.6);
           if (queued) { const q = queued; queued = 0; move(q); }
         }
@@ -330,7 +342,8 @@
         b.y += speed + b.crawl;
         b.wiggle += 0.25;
         // 抱在竹子上时被往下爬的虫子撞到
-        if (panda.jumpT === 0 && b.lane === panda.lane && b.y > PY - 30 && b.y < PY + 16) hurt();
+        // 被撞判定比画面上看起来小一点（-24 ~ +12）；刚落地的 4 帧内不算，免得“明明躲开了”
+        if (panda.jumpT === 0 && landGrace === 0 && b.lane === panda.lane && b.y > PY - 24 && b.y < PY + 12) hurt();
       }
       bugs = bugs.filter(b => b.y < H + 60 && (!b.dead || b.y < H + 60));
 
@@ -339,7 +352,8 @@
         c.vy = Math.min(c.vy + 0.08, 3.2);
         c.y += speed + c.vy;
         c.swing += 0.08;
-        const px = panda.x, near = Math.abs(LANES[c.lane] - px) < 30 && Math.abs(c.y - panda.y) < 40;
+        // 接闹钟的范围放宽一点
+        const px = panda.x, near = Math.abs(LANES[c.lane] - px) < 40 && Math.abs(c.y - panda.y) < 52;
         if (!c.got && near) {
           c.got = true;
           timeLeft += CLOCK_BONUS;
