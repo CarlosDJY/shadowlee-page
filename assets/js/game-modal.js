@@ -31,6 +31,7 @@
     set('merge', best(readNum('panda_merge_high_score')));
     set('flappy', best(readNum('flappy_best')));
     set('jump', best(readNum('jump_best')));
+    set('bamboo', best(readNum('bamboo_best')));
     const nb = readNum('number_best');
     set('number', nb >= 22966160 ? `已通关<b>22966160</b>` : nb > 3 ? `最大长到<b>${nb}</b>` : '');
     const clears = readSlotClears().filter(m => SLOT_NAMES[m]);
