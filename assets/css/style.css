@@ -1254,3 +1254,20 @@ body.modal-open { overflow: hidden; }
 #game-jump { width: min(420px, calc(100vw - 68px)); }
 #game-jump .game-screen { width: min(100%, calc((100dvh - 250px) * (var(--ratio)))); }
 @media (max-width: 520px) { #game-jump { width: 100%; } #game-jump .game-screen { width: min(100%, calc((100dvh - 215px) * (var(--ratio)))); } }
+
+/* HUD 里的小按钮（例如音效开关） */
+.hud-btn {
+    display: inline-grid;
+    place-items: center;
+    width: 34px;
+    height: 30px;
+    padding: 0;
+    font-size: 15px;
+    line-height: 1;
+    background: var(--game-ice);
+    border: none;
+    border-radius: 999px;
+    cursor: pointer;
+}
+.hud-btn:hover { background: var(--game-ice-line); }
+.hud-btn:focus-visible { outline: 3px solid var(--primary-light); outline-offset: 2px; }

@@ -185,6 +185,14 @@ description: 点击按钮播放语音 / 浏览表情
         </span>
         <span class="game-card-best" data-best-for="jump"></span>
       </button>
+      <button type="button" class="game-card" data-game="bamboo" aria-label="打开熊猫竹林跳">
+        <span class="game-card-icon" aria-hidden="true">🎋</span>
+        <span class="game-card-text">
+          <span class="game-card-name">熊猫竹林跳</span>
+          <span class="game-card-desc">在三根竹子间跳来跳去，撞飞瓢虫、接住闹钟</span>
+        </span>
+        <span class="game-card-best" data-best-for="bamboo"></span>
+      </button>
       <button type="button" class="game-card" data-game="number" aria-label="打开熊猫大胃王">
         <span class="game-card-icon" aria-hidden="true">🍽️</span>
         <span class="game-card-text">
@@ -354,6 +362,19 @@ description: 点击按钮播放语音 / 浏览表情
           <p class="game-tip">按住画面或空格蓄力，松开起跳。角色模型来自 <a href="https://github.com/shaw-core/ShadowLee_It-s-MyGO-" target="_blank" rel="noopener">ShadowLee: It's MyGO!</a></p>
         </div>
 
+        <div class="game-instance" id="game-bamboo" data-game="bamboo" data-title="熊猫竹林跳" style="display:none;">
+          <div class="game-hud">
+            <span class="hud-chip"><span class="hud-label">得分</span><span class="hud-num" id="bamboo-score">0</span></span>
+            <span class="hud-chip"><span class="hud-label">时间</span><span class="hud-num" id="bamboo-time">45</span></span>
+            <span class="hud-chip best"><span class="hud-label">最高</span><span class="hud-num" id="bamboo-best">0</span></span>
+            <button type="button" class="hud-btn" id="bamboo-mute" aria-label="关闭音效" aria-pressed="false">🔊</button>
+          </div>
+          <div class="game-screen" style="--ratio: 400 / 600;">
+            <canvas id="bamboo-canvas" width="400" height="600"></canvas>
+          </div>
+          <p class="game-tip">点画面左半 / 右半边（或按 ← →）跳到旁边的竹子</p>
+        </div>
+
         <div class="game-instance" id="game-number" data-game="number" data-title="熊猫大胃王" style="display:none;">
           <div class="game-hud">
             <span class="hud-chip"><span class="hud-label">我的数字</span><span class="hud-num" id="number-value">1</span></span>
@@ -373,7 +394,7 @@ description: 点击按钮播放语音 / 浏览表情
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600&display=swap">
-<link rel="stylesheet" href="{{ '/assets/css/style.css' | relative_url }}?v=13">
+<link rel="stylesheet" href="{{ '/assets/css/style.css' | relative_url }}?v=14">
 <script>
   window.SITE_BASE = "{{ '/' | relative_url }}";
   // Cloudflare Worker 上传服务地址
@@ -382,10 +403,11 @@ description: 点击按钮播放语音 / 浏览表情
   window.EMOTE_META = {{ site.data.emotes_meta | jsonify }};
 </script>
 <script src="{{ '/assets/js/player.js' | relative_url }}?v=13" defer></script>
-<script src="{{ '/assets/js/game-modal.js' | relative_url }}?v=15" defer></script>
+<script src="{{ '/assets/js/game-modal.js' | relative_url }}?v=16" defer></script>
 <script src="{{ '/assets/js/game-slot.js' | relative_url }}?v=13" defer></script>
 <script src="{{ '/assets/js/game-breakout.js' | relative_url }}?v=13" defer></script>
 <script src="{{ '/assets/js/game-merge.js' | relative_url }}?v=15" defer></script>
 <script src="{{ '/assets/js/game-flappy.js' | relative_url }}?v=13" defer></script>
 <script type="module" src="{{ '/assets/js/game-jump.js' | relative_url }}?v=13"></script>
 <script src="{{ '/assets/js/game-number.js' | relative_url }}?v=16" defer></script>
+<script src="{{ '/assets/js/game-bamboo.js' | relative_url }}?v=1" defer></script>
